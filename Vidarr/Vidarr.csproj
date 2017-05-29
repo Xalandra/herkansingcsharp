@@ -99,7 +99,8 @@
     <Compile Include="Classes\Converted.cs" />
     <Compile Include="Classes\Crawler.cs" />
     <Compile Include="Classes\CrawlerRegex.cs" />
-    <Compile Include="Classes\MaakHttpClientAan.cs" />
+    <Compile Include="Classes\dbConn.cs" />
+    <Compile Include="Classes\MaakHttpClient.cs" />
     <Compile Include="Classes\ResultZoekterm.cs" />
     <Compile Include="Classes\ZoekZoekterm.cs" />
     <Compile Include="DownloadModelView.cs" />
