@@ -8,11 +8,11 @@ using Windows.Web.Http;
 
 namespace Vidarr.Classes
 {
-    class MaakHttpClientAan
+    class CreateHTTPClient
     {
         public HttpClient httpClient;
 
-        public MaakHttpClientAan() {
+        public CreateHTTPClient() {
             //httpClient = maakHttpClient();
             Task.Factory.StartNew(()=> {
                 httpClient = maakHttpClient();
