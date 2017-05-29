@@ -17,7 +17,7 @@ namespace Vidarr.Classes
         //zoek op userinput
         static public async Task<string> crawlZoekterm(string zoekterm)
         {
-            MaakHttpClientAan httpClientRequest = new MaakHttpClientAan();
+            MaakHttpClient httpClientRequest = new MaakHttpClient();
             string httpResponseBody = await httpClientRequest.doeHttpRequestYoutubeMetZoektermEnGeefResults(zoekterm);
 
             //haal de results uit de response
@@ -36,12 +36,12 @@ namespace Vidarr.Classes
                     string antwoord = "";
 
                     //getResponseBody url
-                    httpClientRequest = new MaakHttpClientAan();
+                    httpClientRequest = new MaakHttpClient();
                     await Task.Delay(1000);
 
                     //welke url crawlen
                     //Debug.WriteLine("url in getResponseBody() = " + url);
-                    antwoord = await httpClientRequest.doeHttpRequestYoutubeVoorScrawlerEnGeefResults(url);
+                    antwoord = await httpClientRequest.makeHTTPRequestAndGiveResults(url);
 
                     //haal content uit string
                     body = CrawlerRegex.regexContent(antwoord);

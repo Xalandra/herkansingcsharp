@@ -8,18 +8,18 @@ using Windows.Web.Http;
 
 namespace Vidarr.Classes
 {
-    class maakHttpClient
+    class MaakHttpClient
     {
         public HttpClient httpClient;
 
-        public maakHttpClient() {
-            //httpClient = maakHttpClient();
+        public MaakHttpClient() {
+            //httpClient = maakHttpClientAan();
             Task.Factory.StartNew(()=> {
-                httpClient = maakHttpClient();
+                httpClient = maakHttpClientAan();
             });
         }
 
-        public HttpClient maakHttpClient()
+        public HttpClient maakHttpClientAan()
         {
             //Create an HTTP client object
             HttpClient httpClient = new HttpClient();
@@ -61,7 +61,7 @@ namespace Vidarr.Classes
             return httpResponseBody;
         }
 
-        public async Task<string> doeHttpRequestYoutubeVoorScrawlerEnGeefResults(string url)
+        public async Task<string> makeHTTPRequestAndGiveResults(string url)
         {
             Uri requestUri = new Uri(url);
             //Send the GET request asynchronously and retrieve the response as a string.
