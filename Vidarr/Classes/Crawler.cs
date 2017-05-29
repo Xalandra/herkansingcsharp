@@ -16,195 +16,157 @@ namespace Vidarr.Classes
     class Crawler
     {
         MaakHttpClientAan httpClientRequest;
-        List<string> lijstUrls;
-        List<string> lijstResponses;
-        List<string> lijstResponsesKeywords;
+        List<string> listURL;
+        List<string> listResponses;
+        List<string> listResponsesKeywords;
         Object locker;
-        bool beginGelukt = false;
+        bool bootingCrawler = false;
 
-        int aantalGecrawled;
+        int crawlerAmount;
 
         public Crawler()
         {
-            lijstUrls = new List<string>();
-            lijstResponses = new List<string>();
-            lijstResponsesKeywords = new List<string>();
+            listURL = new List<string>();
+            listResponses = new List<string>();
+            listResponsesKeywords = new List<string>();
             locker = new Object();
 
-            Task beginpuntCrawl = new Task(() => 
+            Task startupCrawling = new Task(() => 
             {
-                startCrawlen();
+                startCrawling();
             });
-            beginpuntCrawl.Start();
+            startupCrawling.Start();
         }
 
-        //start crawlen is een task
-        public async void startCrawlen() {
-            //leeg db
-            maakDatabaseLeeg();
+        //startCrawling is a single task to empty DB before the crawler starts.
+        public async void startCrawling() {
+            //Empty Database.
+            emptyDatabase();
 
-            //haal eerste body op
-            beginGelukt = await crawlBeginpunt();
+            //get body for crawler to work with.
+            bootingCrawler = await crawlerStartingPoint();
 
-            //ga verder met 1e body
-            gaMaarCrawlen();
+            //Start from first returned body
+            crawlerGO();
         }
 
-        //eerst database leegmaken
-        public void maakDatabaseLeeg()
+        //Function responsible of clearing database of queries before the crawler can start.
+        public void emptyDatabase()
         {
-            MySqlConnection conn;
-            string myConnectionString;
+            dbConn.dbConnection();
+        }
 
-            myConnectionString = "Server=127.0.0.1;Database=vidarr;Uid=root;Pwd='';SslMode=None;charset=utf8";
-
+        //This gives the crawler a starting point without user input.
+        public async Task<bool> crawlerStartingPoint()
+        {
+            bool completed = false;
+            //Starting point
             try
             {
-                conn = new MySqlConnection(myConnectionString);
-                MySqlCommand cmd = new MySqlCommand();
-
-                cmd.CommandText = "truncate video";
-                conn.Open();
-                cmd.CommandType = CommandType.Text;
-                cmd.Connection = conn;
-                cmd.ExecuteNonQuery();
-            }
-            catch (MySqlException ex)
-            {
-                //MessageBox.Show(ex.Message);
-                var dialog = new MessageDialog(ex.Message);
-                //dialog.ShowAsync();
-
-            }
-        }
-
-        //zoek zonder input van user beginpunt
-        public async Task<bool> crawlBeginpunt()
-        {
-            bool gelukt = false;
-            //beginpunt
-            try
-            {
-                //crawl beginpunt
-                Debug.WriteLine("crawlBeginpunt gets results");
+                //Crawler starting point
+                Debug.WriteLine("crawlerStartingPoint gets results");
                 httpClientRequest = new MaakHttpClientAan();
                 string httpResponseBody = "";
                 string url = "https://www.youtube.com/";
-                httpResponseBody = await httpClientRequest.doeHttpRequestYoutubeVoorScrawlerEnGeefResults(url);
+                httpResponseBody = await httpClientRequest.makeHTTPRequestAndGiveResults(url);
 
-                //haal de body uit de response
+                //Get the body from the HTTP response.
                 httpResponseBody = CrawlerRegex.regexContent(httpResponseBody);
 
                 lock (this.locker)
                 {
-                    lijstResponses.Add(httpResponseBody);
-                    gelukt = true;
+                    listResponses.Add(httpResponseBody);
+                    completed = true;
                 }
             }
             catch (NullReferenceException e)
             {
-                Debug.WriteLine("crawlBeginpunt() geeft NullReferenceException: " + e.Message);
+                Debug.WriteLine("crawlerStartingPoint() geeft NullReferenceException: " + e.Message);
             }
 
-            return gelukt;
+            return completed;
         }
 
 
-        public async void gaMaarCrawlen()
+        public async void crawlerGO()
         {
             bool finished = false;
 
-            aantalGecrawled = 0;
+            crawlerAmount = 0;
 
-            //zolang true crawl maar door
+            //If the crawler returns TRUE, continue crawling.
             while (!finished)
             {
-                //voor testen max 50 rondes
-                //if (aantalGecrawled < 10)
-                //{
-                    //pak alleen uit lijstResponses als lijstUrls minder dan 11 heeft;
-                    if (lijstUrls.Count < 11)
+                //For testing purposees a maximum of 50 results are returned.
+                //Only fetch from listResponses if listURL has less than 11 results.
+                    if (listURL.Count < 11)
                     {
-                        getUrls(pakUitQueue("responses")); //vult lijstUrls bij
-                        aantalGecrawled++;
+                        getUrls(fetchFromQueue("responses")); //Fills listURL
+                        crawlerAmount++;
                     }
 
-                    //haal 10 bodies op
+                    //Fetch 10 bodies
                     for (int i = 0; i < 10; i++)
                     {
-                        //pak eerste url en haal body eruit
-                        string body = await getResponseBody(pakUitQueue("urls")); //vult lijstResponses(Keywords) aan
-                        //als body niet lege string is, lege string kan komen door foute url in httprequest
+                        //Fetch first URL and remove body
+                        string body = await getResponseBody(fetchFromQueue("urls")); //Fetches keywords and adds it
+                        //If body isn't an empty string. Empty string is possible due to wrong URL in HTTPRequest.
                         if (!body.Equals(""))
                         {
-                            //zet body in de twee bodylijsten
+                            //Enter body in double Body response.
                             lock (this.locker)
                             {
-                                lijstResponses.Add(body);
-                                lijstResponsesKeywords.Add(body);
+                                listResponses.Add(body);
+                                listResponsesKeywords.Add(body);
                             }
-                            aantalGecrawled++;
+                            crawlerAmount++;
                         }
                     }
 
-                    //pak uit lijstResponsesKeywords zolang er een body in zit
-                    while (lijstResponsesKeywords.Count > 0)
+                    //Fetch from listResponsesKeywords if there is a body present.
+                    while (listResponsesKeywords.Count > 0)
                     {
-                        //haal keywords uit body uit lijstResponsesKeywords
-                        getKeywords(pakUitQueue("keywords"));
-                        //aantalGecrawled++;
+                        //Fetch keywords from body from listResponseKeywords
+                        getKeywords(fetchFromQueue("keywords"));
                     }
-                //}
-                //else
-                //{
-                //    //stop met crawlen omdat aantal meer is dan 50
-                //    finished = true;
-                //
-                //    Debug.WriteLine("aantalGecrawled max bereikt");
-                //}
-            }
+                }
         }
 
         
         public async Task<string> getResponseBody(string url)
-        //public async void getResponseBody(string url)
         {
-            string antwoord = "";
-            //Debug.WriteLine("getResponseBody starts");
+            string replyBody = "";
 
             //getResponseBody url
             httpClientRequest = new MaakHttpClientAan();
 
-            //welke url crawlen
+            //Which URL to fetch
             Debug.WriteLine("url in getResponseBody() = " + url);
 
             try
             {
-                antwoord = await httpClientRequest.doeHttpRequestYoutubeVoorScrawlerEnGeefResults(url); //await = wacht totdat antwoord is
-                //Debug.WriteLine(antwoord);
+                replyBody = await httpClientRequest.makeHTTPRequestAndGiveResults(url); //await = wacht totdat antwoord is
             }
             catch (Exception ex)
             {
-                //als httprequest bijv door foute url een error terug geeft
+                //Give exception if HTTPRequest has bugged.
                 Debug.WriteLine("httpError: " + ex.StackTrace);
             }
 
-            return antwoord;
+            return replyBody;
         }
 
         public void getUrls(string httpResponseBody)
         {
             try
             {
-                List<string> gevondenUrls = CrawlerRegex.regexUrls(httpResponseBody);
-                //List<string> gevondenUrls = regexUrls(httpResponseBody);
-                //toevoegen aan lijstUrls
+                List<string> urlsFound = CrawlerRegex.regexUrls(httpResponseBody);
+                //Add to listURL
                 lock (this.locker)
                 {
-                    foreach (string url in gevondenUrls)
+                    foreach (string url in urlsFound)
                     {
-                        lijstUrls.Add(url);
-                        //Debug.WriteLine("getUrls: " + url);
+                        listURL.Add(url);
                     }
                 }
                 
@@ -220,7 +182,6 @@ namespace Vidarr.Classes
             try
             {
                 CrawlerRegex.regexKeywords(httpResponseBody);
-                //regexKeywords(httpResponseBody);
             }
             catch (NullReferenceException e)
             {
@@ -228,30 +189,29 @@ namespace Vidarr.Classes
             }
         }
 
-        public string pakUitQueue(string lijst)
+        public string fetchFromQueue(string list)
         {
             string res = "";
-            if (lijst == "responses")
+            if (list == "responses")
             {
                 lock (this.locker)
                 {
-                    if (lijstResponses.Count != 0)
+                    if (listResponses.Count != 0)
                     {
-                        string x = lijstResponses[0];
-                        lijstResponses.Remove(lijstResponses[0]);
+                        string x = listResponses[0];
+                        listResponses.Remove(listResponses[0]);
                         res = x;
                     }
                 }
             }
-            if (lijst == "urls")
+            if (list == "urls")
             {
                 lock (this.locker)
                 {
-                    if (lijstUrls.Count != 0)
+                    if (listURL.Count != 0)
                     {
-                        string x = lijstUrls[0];
-                        lijstUrls.Remove(lijstUrls[0]);
-                        //Debug.WriteLine("pakUitQueue(lijst) geeft terug: " + x);
+                        string x = listURL[0];
+                        listURL.Remove(listURL[0]);
                         res = x;
                     }
                     else
@@ -260,43 +220,20 @@ namespace Vidarr.Classes
                     }
                 }
             }
-            if (lijst == "keywords")
+            if (list == "keywords")
             {
                 lock (this.locker)
                 {
-                    if (lijstResponsesKeywords.Count != 0)
+                    if (listResponsesKeywords.Count != 0)
                     {
-                        string x = lijstResponsesKeywords[0];
-                        lijstResponsesKeywords.Remove(lijstResponsesKeywords[0]);
+                        string x = listResponsesKeywords[0];
+                        listResponsesKeywords.Remove(listResponsesKeywords[0]);
                         res = x;
                     }
                 }
             }
 
             return res;
-        }
-
-        public void outputLists()
-        {
-            try
-            {
-                lock (this.locker)
-                {
-                    Debug.WriteLine("LijstUrls = " + lijstUrls.Count);
-                }
-                lock (this.locker)
-                {
-                    Debug.WriteLine("LijstBodys = " + lijstResponses.Count);
-                }
-                lock (this.locker)
-                {
-                    Debug.WriteLine("LijstKeywords = " + lijstResponsesKeywords.Count);
-                }
-            }
-            catch (NullReferenceException e)
-            {
-                Debug.WriteLine("getKeywords() geeft NullReferenceException: " + e.Message);
-            }
         }
         
     }
