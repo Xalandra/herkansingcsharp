@@ -16,6 +16,8 @@ using Windows.UI.Xaml.Media;
 using Windows.UI.Xaml.Navigation;
 using Vidarr.Classes;
 using System.Threading.Tasks;
+using Windows.UI.Popups;
+using System.Diagnostics;
 
 // The Blank Page item template is documented at http://go.microsoft.com/fwlink/?LinkId=234238
 
@@ -39,28 +41,37 @@ namespace Vidarr
             getVideos();
         }
 
-        private void button_Click(object sender, RoutedEventArgs e)
+        private void convertSelectedFiles(object sender, RoutedEventArgs e)
         {
             Convert conv = new Convert();
-            string selectionBox = ComboBox.SelectionBoxItem.ToString();
-            List<StorageFile> files = new List<StorageFile>();
-            if (file1 != null)
+            string selectionBox;
+            if (ComboBox.SelectedIndex > -1 && file1 != null || file2 != null || file3 != null)
             {
-                files.Add(file1);
+                selectionBox = ComboBox.SelectionBoxItem.ToString();
+                List<StorageFile> files = new List<StorageFile>();
+                if (file1 != null)
+                {
+                    files.Add(file1);
+                }
+                if (file2 != null)
+                {
+                    files.Add(file2);
+                }
+                if (file3 != null)
+                {
+                    files.Add(file3);
+                }
+                conv.ConvertChosenMedia(files, selectionBox);
+                //conv.PickMedia();
             }
-            if (file2 != null)
+            else
             {
-                files.Add(file2);
+                var dialog = new MessageDialog("Oeps er ging iets mis, heeft u een bestand geselecteerd? Heeft u geselecteerd waar het bestand naar geconverteerd moet worden?");
+                dialog.ShowAsync();
             }
-            if (file3 != null)
-            {
-                files.Add(file3);
-            }
-            conv.ConvertChosenMedia(files, selectionBox);
-            //conv.PickMedia();
         }
 
-        private async void button1_Click(object sender, RoutedEventArgs e)
+        private async void selectFile(object sender, RoutedEventArgs e)
         {
             //Maak een nieuwe FileOpenPicker aan
             FileOpenPicker openPicker = new FileOpenPicker();
@@ -81,83 +92,28 @@ namespace Vidarr
 
             //Hier geven we de type selectie weer, single of multiple
             //StorageFile file = await openPicker.PickSingleFileAsync();
-            file1 = await openPicker.PickSingleFileAsync();
+            StorageFile file = await openPicker.PickSingleFileAsync();
             //MULTIPLE SELECTIE::: StorageFile file = await openPicker.PickMultipleFilesAsync();
 
-            if (file1 != null)
+            if (file != null)
             {
-                NameFirstChosenFile.Text = "Gekozen bestand: " + file1.Name;
-            }
-            else
-            {
-                //
-            }
-        }
-
-        private async void button2_Click(object sender, RoutedEventArgs e)
-        {
-            //Maak een nieuwe FileOpenPicker aan
-            FileOpenPicker openPicker = new FileOpenPicker();
-
-            //Kies welke weergave het moet hebben
-            openPicker.ViewMode = PickerViewMode.Thumbnail;
-
-            //STandaard openings plek
-            openPicker.SuggestedStartLocation = PickerLocationId.MusicLibrary;
-
-            //Bestands extensies die toegelaten worden
-            openPicker.FileTypeFilter.Add(".mp3");
-            openPicker.FileTypeFilter.Add(".mp4");
-            openPicker.FileTypeFilter.Add(".wma");
-            openPicker.FileTypeFilter.Add(".mov");
-            openPicker.FileTypeFilter.Add(".flv");
-            openPicker.FileTypeFilter.Add(".avi");
-
-            //Hier geven we de type selectie weer, single of multiple
-            file2 = await openPicker.PickSingleFileAsync();
-            //MULTIPLE SELECTIE::: StorageFile file = await openPicker.PickMultipleFilesAsync();
-
-            if (file2 != null)
-            {
-                NameSecondChosenFile.Text = "Gekozen bestand: " + file2.Name;
-            }
-            else
-            {
-                //
-            }
-        }
-
-        private async void button3_Click_1(object sender, RoutedEventArgs e)
-        {
-            //Maak een nieuwe FileOpenPicker aan
-            FileOpenPicker openPicker = new FileOpenPicker();
-
-            //Kies welke weergave het moet hebben
-            openPicker.ViewMode = PickerViewMode.Thumbnail;
-
-            //STandaard openings plek
-            openPicker.SuggestedStartLocation = PickerLocationId.MusicLibrary;
-
-            //Bestands extensies die toegelaten worden
-            openPicker.FileTypeFilter.Add(".mp3");
-            openPicker.FileTypeFilter.Add(".mp4");
-            openPicker.FileTypeFilter.Add(".wma");
-            openPicker.FileTypeFilter.Add(".mov");
-            openPicker.FileTypeFilter.Add(".flv");
-            openPicker.FileTypeFilter.Add(".avi");
-
-            //Hier geven we de type selectie weer, single of multiple
-            file3 = await openPicker.PickSingleFileAsync();
-            //MULTIPLE SELECTIE::: StorageFile file = await openPicker.PickMultipleFilesAsync();
-
-            if (file3 != null)
-            {
-                NameThirdChosenFile.Text = "Gekozen bestand: " + file3.Name;
-            }
-            else
-            {
-                //
-            }
+                int filenumber = int.Parse((string)((Button)sender).Tag);
+                if (filenumber.Equals(1))
+                {
+                    file1 = file;
+                    NameFirstChosenFile.Text = "Gekozen bestand: " + file1.Name;
+                }
+                else if (filenumber.Equals(2))
+                {
+                    file2 = file;
+                    NameSecondChosenFile.Text = "Gekozen bestand: " + file2.Name;
+                }
+                else
+                {
+                    file3 = file;
+                    NameThirdChosenFile.Text = "Gekozen bestand: " + file3.Name;
+                }
+            } 
         }
 
         public async void getVideos()
@@ -186,16 +142,19 @@ namespace Vidarr
                 }
 
                 //listOfStudents.Add("John");
-                lijstGeconverteerd.ItemsSource = bestandenLijstDownloadsVidarrMap;
+                ListConvertedFiles.ItemsSource = bestandenLijstDownloadsVidarrMap;
                 await Task.Delay(10000);
             }
         }
 
-        private void backDownloader_Click(object sender, RoutedEventArgs e)
+        private void goToDownloaderScreen(object sender, RoutedEventArgs e)
         {
             this.Frame.Navigate(typeof(pgDownload));
         }
 
+        private void SelectFileOne_Click(object sender, RoutedEventArgs e)
+        {
 
+        }
     }
 }
