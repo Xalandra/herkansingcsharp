@@ -42,7 +42,7 @@ namespace Vidarr
         private void button_Click(object sender, RoutedEventArgs e)
         {
             Convert conv = new Convert();
-            string selectionBox = comboBox.SelectionBoxItem.ToString();
+            string selectionBox = ComboBox.SelectionBoxItem.ToString();
             List<StorageFile> files = new List<StorageFile>();
             if (file1 != null)
             {
@@ -86,7 +86,7 @@ namespace Vidarr
 
             if (file1 != null)
             {
-                textBlock.Text = "Picked file: " + file1.Name;
+                NameFirstChosenFile.Text = "Gekozen bestand: " + file1.Name;
             }
             else
             {
@@ -119,7 +119,7 @@ namespace Vidarr
 
             if (file2 != null)
             {
-                textBlock1.Text = "Picked file: " + file2.Name;
+                NameSecondChosenFile.Text = "Gekozen bestand: " + file2.Name;
             }
             else
             {
@@ -152,7 +152,7 @@ namespace Vidarr
 
             if (file3 != null)
             {
-                textBlock2.Text = "Picked file: " + file3.Name;
+                NameThirdChosenFile.Text = "Gekozen bestand: " + file3.Name;
             }
             else
             {

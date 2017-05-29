@@ -7,45 +7,262 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     mc:Ignorable="d">
 
-    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}">
-        <Button x:Name="button" Content="Convert" HorizontalAlignment="Left" Margin="108,636,0,0" VerticalAlignment="Top" Width="318" Height="157" Click="button_Click"/>
-        <Button x:Name="button1" Content="Select a file..." HorizontalAlignment="Left" Margin="108,161,0,0" VerticalAlignment="Top" Width="185" Height="50" Click="button1_Click"/>
-        <TextBlock x:Name="textBlock" HorizontalAlignment="Left" Margin="327,161,0,0" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Top" Width="605" Height="23"/>
-        <Button x:Name="button2" Content="Select a file..." HorizontalAlignment="Left" Margin="108,229,0,0" VerticalAlignment="Top" Width="185" Height="50" Click="button2_Click"/>
-        <TextBlock x:Name="textBlock1" HorizontalAlignment="Left" Margin="327,229,0,0" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Top" Width="605"/>
-        <Button x:Name="button3" Content="Select a file..." HorizontalAlignment="Left" Margin="108,302,0,0" VerticalAlignment="Top" Width="185" Height="50" Click="button3_Click_1"/>
-        <TextBlock x:Name="textBlock2" HorizontalAlignment="Left" Margin="327,302,0,0" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Top" Width="605"/>
-        <ComboBox x:Name="comboBox" HorizontalAlignment="Left" Margin="108,417,0,0" VerticalAlignment="Top" Width="564" Height="65">
-            <ComboBoxItem Content="MP3"/>
-            <ComboBoxItem Content="MP4"/>
-            <ComboBoxItem Content="WAV"/>
-        </ComboBox>
-        <ListView x:Name="lijstGeconverteerd" HorizontalContentAlignment="Stretch" Height="635" ScrollViewer.VerticalScrollMode="Enabled" Margin="817,161,51,0" VerticalAlignment="Top" Width="1052">
-            <ListView.ItemTemplate>
-                <DataTemplate>
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                        </Grid.RowDefinitions>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="500"/>
-                            <ColumnDefinition Width="100"/>
-                            <ColumnDefinition Width="50"/>
-                        </Grid.ColumnDefinitions>
-                        <StackPanel Grid.Row="0" Grid.Column="0"  Orientation="Horizontal" Margin="0,0,20,0">
-                            <TextBlock Grid.Column="0" Margin="5,0,0,0" x:Name="NameTxt" FontStyle="Italic" TextWrapping="Wrap" Text="{Binding titel}" Foreground="Black"/>
-                        </StackPanel>
-                        <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal" Margin="0,0,20,0">
-                            <TextBlock Margin="5,0,0,0" Name="PhoneTxt" TextWrapping="Wrap" Foreground="DarkGray" Text="{Binding grootte}"  />
-                        </StackPanel>
-                        <StackPanel Grid.Row="0" Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right">
-                            <TextBlock Margin="5,0,0,0" Name="PhoneTxt2" TextWrapping="Wrap" Foreground="DarkGray" Text="{Binding extensie}"  />
-                        </StackPanel>
-                    </Grid>
-                </DataTemplate>
-            </ListView.ItemTemplate>
-        </ListView>
-        <Button Name="backDownloader" Content="Go To Downloader" HorizontalAlignment="Left" Margin="523,761,0,0" VerticalAlignment="Top" Height="32" Width="149" Click="backDownloader_Click"/>
+    <Grid Background="{ThemeResource ApplicationPageBackgroundThemeBrush}" MinWidth="400" MinHeight="500">
+
+        <!-- Start of VisualStateManager -->
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup>
+                <VisualState x:Name="SuperSmall">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="0" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <!-- Setters for left half -->
+                        <Setter Target="DescriptionLabelConverter.FontSize" Value="14" />
+                        <Setter Target="DescriptionLabelConverter.Margin" Value="33,33,33,0" />
+
+
+                        <Setter Target="SelectFileOne.Padding" Value="10" />
+                        <Setter Target="SelectFileOne.HorizontalAlignment" Value="Stretch" />
+                        <Setter Target="SelectFileOne.Margin" Value="33,80,33,0" />
+
+                        <Setter Target="NameFirstChosenFile.Margin" Value="33,130,33,0" />
+                        <Setter Target="NameFirstChosenFile.FontSize" Value="8" />
+                        <Setter Target="NameFirstChosenFile.MaxHeight" Value="30" />
+
+                        <Setter Target="SelectFileTwo.Padding" Value="10" />
+                        <Setter Target="SelectFileTwo.HorizontalAlignment" Value="Stretch" />
+                        <Setter Target="SelectFileTwo.Margin" Value="33,170,33,0" />
+
+                        <Setter Target="NameSecondChosenFile.Margin" Value="33,220,33,0" />
+                        <Setter Target="NameSecondChosenFile.FontSize" Value="8" />
+                        <Setter Target="NameSecondChosenFile.MaxHeight" Value="30" />
+
+                        <Setter Target="SelectFileThree.Padding" Value="10" />
+                        <Setter Target="SelectFileThree.HorizontalAlignment" Value="Stretch" />
+                        <Setter Target="SelectFileThree.Margin" Value="33,260,33,0" />
+
+                        <Setter Target="NameThirdChosenFile.Margin" Value="33,310,33,0" />
+                        <Setter Target="NameThirdChosenFile.FontSize" Value="8" />
+                        <Setter Target="NameThirdChosenFile.MaxHeight" Value="30" />
+
+
+                        <Setter Target="ConvertFormatLabel.FontSize" Value="14" />
+                        <Setter Target="ConvertFormatLabel.Margin" Value="33,345,33,0" />
+
+                        <Setter Target="ComboBox.Margin" Value="33,370,33,0" />
+
+                        <Setter Target="ConvertFilesButton.Padding" Value="10" />
+
+                        <!-- Setters for right half -->
+
+                    </VisualState.Setters>
+                </VisualState>
+                
+                <VisualState x:Name="Smartphone">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="700" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <!-- Setters for left half -->
+                        <Setter Target="DescriptionLabelConverter.FontSize" Value="14" />
+                        <Setter Target="DescriptionLabelConverter.Margin" Value="33,33,33,0" />
+
+
+                        <Setter Target="SelectFileOne.Padding" Value="10" />
+                        <Setter Target="SelectFileOne.HorizontalAlignment" Value="Stretch" />
+                        <Setter Target="SelectFileOne.Margin" Value="33,80,33,0" />
+
+                        <Setter Target="NameFirstChosenFile.Margin" Value="33,130,33,0" />
+                        <Setter Target="NameFirstChosenFile.FontSize" Value="12" />
+                        <Setter Target="NameFirstChosenFile.MaxHeight" Value="30" />
+
+                        <Setter Target="SelectFileTwo.Padding" Value="10" />
+                        <Setter Target="SelectFileTwo.HorizontalAlignment" Value="Stretch" />
+                        <Setter Target="SelectFileTwo.Margin" Value="33,170,33,0" />
+
+                        <Setter Target="NameSecondChosenFile.Margin" Value="33,220,33,0" />
+                        <Setter Target="NameSecondChosenFile.FontSize" Value="12" />
+                        <Setter Target="NameSecondChosenFile.MaxHeight" Value="30" />
+
+                        <Setter Target="SelectFileThree.Padding" Value="10" />
+                        <Setter Target="SelectFileThree.HorizontalAlignment" Value="Stretch" />
+                        <Setter Target="SelectFileThree.Margin" Value="33,260,33,0" />
+
+                        <Setter Target="NameThirdChosenFile.Margin" Value="33,310,33,0" />
+                        <Setter Target="NameThirdChosenFile.FontSize" Value="12" />
+                        <Setter Target="NameThirdChosenFile.MaxHeight" Value="30" />
+
+
+                        <Setter Target="ConvertFormatLabel.FontSize" Value="14" />
+                        <Setter Target="ConvertFormatLabel.Margin" Value="33,345,33,0" />
+
+                        <Setter Target="ComboBox.Margin" Value="33,370,33,0" />
+
+                        <Setter Target="ConvertFilesButton.Padding" Value="10" />
+
+                        <!-- Setters for right half -->
+
+                    </VisualState.Setters>
+                </VisualState>
+
+                <VisualState x:Name="Tablet">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="900" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <!-- Setters for left half -->
+                        <Setter Target="DescriptionLabelConverter.FontSize" Value="20" />
+                        <Setter Target="DescriptionLabelConverter.Margin" Value="33,33,33,0" />
+
+
+                        <Setter Target="SelectFileOne.Padding" Value="15" />
+                        <Setter Target="SelectFileOne.HorizontalAlignment" Value="Left" />
+                        <Setter Target="SelectFileOne.Margin" Value="33,110,33,0" />
+
+                        <Setter Target="NameFirstChosenFile.Margin" Value="180,110,33,0" />
+                        <Setter Target="NameFirstChosenFile.FontSize" Value="18" />
+                        <Setter Target="NameFirstChosenFile.MaxHeight" Value="70" />
+
+                        <Setter Target="SelectFileTwo.Padding" Value="15" />
+                        <Setter Target="SelectFileTwo.HorizontalAlignment" Value="Left" />
+                        <Setter Target="SelectFileTwo.Margin" Value="33,210,33,0" />
+
+                        <Setter Target="NameSecondChosenFile.Margin" Value="180,210,33,0" />
+                        <Setter Target="NameSecondChosenFile.FontSize" Value="18" />
+                        <Setter Target="NameSecondChosenFile.MaxHeight" Value="70" />
+
+                        <Setter Target="SelectFileThree.Padding" Value="15" />
+                        <Setter Target="SelectFileThree.HorizontalAlignment" Value="Left" />
+                        <Setter Target="SelectFileThree.Margin" Value="33,310,33,0" />
+
+                        <Setter Target="NameThirdChosenFile.Margin" Value="180,310,33,0" />
+                        <Setter Target="NameThirdChosenFile.FontSize" Value="18" />
+                        <Setter Target="NameThirdChosenFile.MaxHeight" Value="70" />
+
+
+                        <Setter Target="ConvertFormatLabel.FontSize" Value="20" />
+                        <Setter Target="ConvertFormatLabel.Margin" Value="33,400,33,0" />
+
+                        <Setter Target="ComboBox.Margin" Value="33,440,33,0" />
+
+                        <Setter Target="ConvertFilesButton.Padding" Value="16" />
+
+                        <!-- Setters for right half -->
+
+                    </VisualState.Setters>
+                </VisualState>
+
+                <VisualState x:Name="Desktop">
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="1300" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <!-- Setters for left half -->
+                        <Setter Target="DescriptionLabelConverter.FontSize" Value="28" />
+                        <Setter Target="DescriptionLabelConverter.Margin" Value="33,20,33,0" />
+
+
+                        <Setter Target="SelectFileOne.Padding" Value="20" />
+                        <Setter Target="SelectFileOne.HorizontalAlignment" Value="Left" />
+                        <Setter Target="SelectFileOne.Margin" Value="33,110,33,0" />
+
+                        <Setter Target="NameFirstChosenFile.Margin" Value="200,110,33,0" />
+                        <Setter Target="NameFirstChosenFile.FontSize" Value="26" />
+                        <Setter Target="NameFirstChosenFile.MaxHeight" Value="100" />
+
+                        <Setter Target="SelectFileTwo.Padding" Value="20" />
+                        <Setter Target="SelectFileTwo.HorizontalAlignment" Value="Left" />
+                        <Setter Target="SelectFileTwo.Margin" Value="33,240,33,0" />
+
+                        <Setter Target="NameSecondChosenFile.Margin" Value="200,240,33,0" />
+                        <Setter Target="NameSecondChosenFile.FontSize" Value="26" />
+                        <Setter Target="NameSecondChosenFile.MaxHeight" Value="100" />
+
+                        <Setter Target="SelectFileThree.Padding" Value="20" />
+                        <Setter Target="SelectFileThree.HorizontalAlignment" Value="Left" />
+                        <Setter Target="SelectFileThree.Margin" Value="33,370,33,0" />
+
+                        <Setter Target="NameThirdChosenFile.Margin" Value="200,370,33,0" />
+                        <Setter Target="NameThirdChosenFile.FontSize" Value="26" />
+                        <Setter Target="NameThirdChosenFile.MaxHeight" Value="100" />
+
+
+                        <Setter Target="ConvertFormatLabel.FontSize" Value="28" />
+                        <Setter Target="ConvertFormatLabel.Margin" Value="33,500,33,0" />
+
+                        <Setter Target="ComboBox.Margin" Value="33,550,33,0" />
+
+                        <Setter Target="ConvertFilesButton.Padding" Value="24" />
+
+                        <!-- Setters for right half -->
+
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+        <!-- End of VisualStateManager -->
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+        </Grid.RowDefinitions>
+
+        <!-- left half -->
+        <Grid Grid.Column="0" Grid.Row="0">
+            <TextBlock x:Name="DescriptionLabelConverter" HorizontalAlignment="Left" TextWrapping="Wrap" Text="Kies hier onder een bestand om te converteren:" VerticalAlignment="Top"/>
+
+            <Button x:Name="SelectFileOne" Content="Kies bestand..." VerticalAlignment="Top" Click="button1_Click"/>
+
+            <TextBlock x:Name="NameFirstChosenFile" TextWrapping="Wrap" Text="Geen geselecteerd" VerticalAlignment="Top" />
+            <Button x:Name="SelectFileTwo" Content="Kies bestand..." HorizontalAlignment="Left" VerticalAlignment="Top" Click="button2_Click"/>
+            <TextBlock x:Name="NameSecondChosenFile" TextWrapping="Wrap" Text="Geen geselecteerd" VerticalAlignment="Top" />
+            <Button x:Name="SelectFileThree" Content="Kies bestand..." HorizontalAlignment="Left" VerticalAlignment="Top" Click="button3_Click_1"/>
+            <TextBlock x:Name="NameThirdChosenFile" TextWrapping="Wrap" Text="Geen geselecteerd" VerticalAlignment="Top" />
+
+            <TextBlock x:Name="ConvertFormatLabel" HorizontalAlignment="Left" TextWrapping="Wrap" Text="Converteer naar:" VerticalAlignment="Top"/>
+
+            <ComboBox x:Name="ComboBox" HorizontalAlignment="Stretch" VerticalAlignment="Top" Width="Auto" Height="50">
+                <ComboBoxItem Content="MP3"/>
+                <ComboBoxItem Content="MP4"/>
+                <ComboBoxItem Content="WAV"/>
+            </ComboBox>
+
+            <Button x:Name="ConvertFilesButton" Content="Converteer" HorizontalAlignment="Stretch" Margin="33,0,33,33" VerticalAlignment="Bottom" Click="button_Click" FontWeight="Bold"/>
+        </Grid>
+
+        <!-- right half -->
+        <Grid Grid.Column="1" Grid.Row="0" BorderBrush="#FFD30000" BorderThickness="4,0,0,0">
+            <ListView x:Name="lijstGeconverteerd" HorizontalContentAlignment="Stretch" Height="635" ScrollViewer.VerticalScrollMode="Enabled" Margin="817,161,51,0" VerticalAlignment="Top" Width="1052">
+                <ListView.ItemTemplate>
+                    <DataTemplate>
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="500"/>
+                                <ColumnDefinition Width="100"/>
+                                <ColumnDefinition Width="50"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Row="0" Grid.Column="0"  Orientation="Horizontal" Margin="0,0,20,0">
+                                <TextBlock Grid.Column="0" Margin="5,0,0,0" x:Name="NameTxt" FontStyle="Italic" TextWrapping="Wrap" Text="{Binding titel}" Foreground="Black"/>
+                            </StackPanel>
+                            <StackPanel Grid.Row="0" Grid.Column="1" Orientation="Horizontal" Margin="0,0,20,0">
+                                <TextBlock Margin="5,0,0,0" Name="PhoneTxt" TextWrapping="Wrap" Foreground="DarkGray" Text="{Binding grootte}"  />
+                            </StackPanel>
+                            <StackPanel Grid.Row="0" Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Right">
+                                <TextBlock Margin="5,0,0,0" Name="PhoneTxt2" TextWrapping="Wrap" Foreground="DarkGray" Text="{Binding extensie}"  />
+                            </StackPanel>
+                        </Grid>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+            <Button Name="backDownloader" Content="Go To Downloader" HorizontalAlignment="Left" Margin="523,761,0,0" VerticalAlignment="Top" Height="32" Width="149" Click="backDownloader_Click"/>
+        </Grid>
 
     </Grid>
 </Page>
