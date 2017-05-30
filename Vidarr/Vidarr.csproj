@@ -130,6 +130,15 @@
     <Content Include="Assets\SplashScreen.scale-150.png" />
     <Content Include="Assets\SplashScreen.scale-400.png" />
     <Content Include="Assets\Square310x310Logo.scale-400.jpg" />
+    <Content Include="Assets\Square600x600Logo.scale-400.jpg" />
+    <Content Include="Assets\Vidarr142x142Logo.scale-200.png" />
+    <Content Include="Assets\Vidarr150x150Logo.scale-100.png" />
+    <Content Include="Assets\Vidarr150x150Logo.scale-200.png" />
+    <Content Include="Assets\Vidarr150x150Logo.scale-400.png" />
+    <Content Include="Assets\Vidarr44x44Logo.scale-200.png" />
+    <Content Include="Assets\Vidarr44x44Logo.targetsize-24.png" />
+    <Content Include="Assets\Vidarr620x620Logo.scale-200.png" />
+    <Content Include="Assets\VidarrWide310x150Logo.scale-200.png" />
     <Content Include="Properties\Default.rd.xml" />
     <Content Include="Assets\LockScreenLogo.scale-200.png" />
     <Content Include="Assets\SplashScreen.scale-200.png" />
@@ -138,6 +147,9 @@
     <Content Include="Assets\Square44x44Logo.targetsize-24_altform-unplated.png" />
     <Content Include="Assets\StoreLogo.png" />
     <Content Include="Assets\Wide310x150Logo.scale-200.png" />
+    <Content Include="Square150x150Logo.scale-150.jpg" />
+    <Content Include="Square600x600Logo.scale-100.jpg" />
+    <Content Include="Square600x600Logo.scale-400.jpg" />
   </ItemGroup>
   <ItemGroup>
     <ApplicationDefinition Include="App.xaml">
