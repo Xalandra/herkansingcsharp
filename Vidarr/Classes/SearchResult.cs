@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Vidarr.Classes
 {
-    class ResultZoekterm
+    class SearchResult
     {
         public string url { get; set; }
         public string titel { get; set; }

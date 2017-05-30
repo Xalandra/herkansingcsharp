@@ -15,7 +15,7 @@ namespace Vidarr.Classes
 {
     class Crawler
     {
-        MaakHttpClient httpClientRequest;
+        HTTPFactory httpClientRequest;
         List<string> listURL;
         List<string> listResponses;
         List<string> listResponsesKeywords;
@@ -65,10 +65,10 @@ namespace Vidarr.Classes
             {
                 //Crawler starting point
                 Debug.WriteLine("crawlerStartingPoint gets results");
-                httpClientRequest = new MaakHttpClient();
+                httpClientRequest = new HTTPFactory();
                 string httpResponseBody = "";
                 string url = "https://www.youtube.com/";
-                httpResponseBody = await httpClientRequest.makeHTTPRequestAndGiveResults(url);
+                httpResponseBody = await httpClientRequest.YoutubeCrawlRequest(url);
 
                 //Get the body from the HTTP response.
                 httpResponseBody = CrawlerRegex.regexContent(httpResponseBody);
@@ -138,14 +138,14 @@ namespace Vidarr.Classes
             string replyBody = "";
 
             //getResponseBody url
-            httpClientRequest = new MaakHttpClient();
+            httpClientRequest = new HTTPFactory();
 
             //Which URL to fetch
             Debug.WriteLine("url in getResponseBody() = " + url);
 
             try
             {
-                replyBody = await httpClientRequest.makeHTTPRequestAndGiveResults(url); //await = wacht totdat antwoord is
+                replyBody = await httpClientRequest.YoutubeCrawlRequest(url); //await = wacht totdat antwoord is
             }
             catch (Exception ex)
             {

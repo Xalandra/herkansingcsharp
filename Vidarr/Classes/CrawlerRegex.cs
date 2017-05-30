@@ -12,31 +12,11 @@ namespace Vidarr.Classes
 {
     class CrawlerRegex
     {
-
-        //haal body uit httpResponseBody
-        static public string regexBody(string response)
-        {
-            //haal body uit string
-            string body = "";
-            string patternBody = @"<body\s(.*?)</body>";
-
-            Match match = Regex.Match(response, patternBody, RegexOptions.IgnoreCase | RegexOptions.Singleline);
-            if (match.Success)
-            {
-                body = match.Value;
-                //Debug.WriteLine(body);
-            }
-            else
-            {
-                //Debug.WriteLine("Geen body kunnen vinden.");
-            }
-            return body;
-        }
-
-        //haal content uit httpResponseBody
+        //Get results from HTTPResponsebody
+        //Body doesn't need a regex because it's already being done by content and URL.
         static public string regexContent(string response)
         {
-            //haal body uit string
+            //Get body from string
             string body = "";
             string patternBody = "id=[\"']content[\"'](.*?)footer";
 
@@ -44,16 +24,18 @@ namespace Vidarr.Classes
             if (match.Success)
             {
                 body = match.Value;
-                //Debug.WriteLine(body);
             }
-            //else{ Debug.WriteLine("Geen content kunnen vinden.");}
+            else
+            {
+                Debug.WriteLine("Geen content kunnen vinden.");
+            }
             return body;
         }
 
-        //haal results uit httpResponseBody
+        //Get results from HTTPResponsebody
         static public string regexResults(string response)
         {
-            //haal body uit string
+            //Get body from string
             string body = "";
             string patternBody = "id=[\"']results[\"'](.*?)class=[\"']branded-page-box\\s*";
 
@@ -61,42 +43,41 @@ namespace Vidarr.Classes
             if (match.Success)
             {
                 body = match.Value;
-                //Debug.WriteLine(body);
             }
             else
             {
-                //Debug.WriteLine("Geen results kunnen vinden.");
+                Debug.WriteLine("Geen results kunnen vinden.");
             }
             return body;
         }
 
-        //haal urls uit content
+        //Fetch URL from content
         static public List<string> regexUrls(string response)
         {
             int maxUrls = 50;
             int gevondenUrls = 0;
             Object thisLocker = new object();
 
-            //haal urls uit body
+            //Fetch URL from body
             List<string> urls = new List<string>();
             string vorigGevondenUrl = "";
             string url = "";
             string patternUrls = "href\\s*=\\s*(?:[\"'](?<1>[^\"']*)[\"']|(?<1>\\S+))"; //beste regex
 
-            //dan urls
+            //Fetch URL
             MatchCollection collection = Regex.Matches(response, patternUrls);
             foreach (Match m in collection)
             {
-                //check of er al 10 urls zijn gevonden
+                //Check for max 10 urls found
                 if (gevondenUrls < maxUrls)
                 {
 
-                    //check of geldige url is
+                    //Check for valid URL
                     if (m.Success)
                     {
                         url = m.Value;
 
-                        //haal href=" er af
+                        //Remove href=" from string
                         url = url.Remove(0, 6);
                         url = url.Remove(url.Length - 1);
                         if (url.Contains("/watch?"))
@@ -105,18 +86,15 @@ namespace Vidarr.Classes
                         }
                         if (url.Contains("www.youtube.com") && !url.Contains("channel") && !url.Contains("user") && !url.Contains("playlist") && !url.Contains("feed") && !url.Contains("bit.ly") && !url.Contains("accounts.google") && !url.Contains("android-app"))
                         {
-                            //Debug.WriteLine("Gevonden url: " + url);
                             bool isUri = Uri.IsWellFormedUriString(url, UriKind.RelativeOrAbsolute);
-                            //correcte uri + nog geen 10 urls toegevoegd + vorig toegevoegde url was niet dezelfde
+                            //Check correct URL, not 10 urls added, last added url wasn't the same.
                             if (isUri && (gevondenUrls < maxUrls) && !vorigGevondenUrl.Equals(url))
                             {
-                                //Debug.WriteLine("Vlak voordat url toegevoegd wordt: " + url);
                                 lock (thisLocker)
                                 {
                                     urls.Add(url);
-                                    //Debug.WriteLine(url);
 
-                                    //dubbele urls te voorkomen
+                                    //Prevent double URLs
                                     vorigGevondenUrl = url;
                                 }
                                 gevondenUrls++;
@@ -132,12 +110,11 @@ namespace Vidarr.Classes
             return urls;
         }
 
-        //haal keywords uit content
+        //Get keywords from content
         static public void regexKeywords(string response)
         {
-            //haal keywords uit body
+            //Fetch keywords from body
             string keywords = "";
-            //string pattern = "title=\"(.*?)</a>";
             string pattern = "(<meta itemprop=\"|<link itemprop=\"thumbnailUrl\")(.*?)\">";
 
             string videoId = "(<meta itemprop=\"videoId\" content=\")(.*?)\">";
@@ -163,39 +140,33 @@ namespace Vidarr.Classes
                 string gevondenThumbnail = "";
                 foreach (Match m in collection)
                 {
-                    //spuug uit van je gevonden hebt
+                    //Check matched resulsts
                     keywords = m.Value;
-                    //Debug.WriteLine("Gevonden keywords: " + keywords);
 
                     collectionUrl = Regex.Matches(m.Value, videoId);
                     foreach (Match m2 in collectionUrl)
                     {
                         gevondenUrl += m2.Groups[2].Value;
-                        //Debug.WriteLine("Gevonden url: " + gevondenUrl);
                     }
                     collectionTitle = Regex.Matches(m.Value, title);
                     foreach (Match m2 in collectionTitle)
                     {
                         gevondenTitle = m2.Groups[2].Value;
-                        //Debug.WriteLine("Gevonden title: " + gevondenTitle);
                     }
                     collectionDescription = Regex.Matches(m.Value, description);
                     foreach (Match m2 in collectionDescription)
                     {
                         gevondenDescription = m2.Groups[2].Value;
-                        //Debug.WriteLine("Gevonden description: " + gevondenDescription);
                     }
                     collectionGenre = Regex.Matches(m.Value, genre);
                     foreach (Match m2 in collectionGenre)
                     {
-                        gevondenGenre = m2.Groups[2].Value;
-                        //Debug.WriteLine("Gevonden genre: " + gevondenGenre);
+                        gevondenGenre = m2.Groups[2].Value;                        
                     }
                     collectionThumbnail = Regex.Matches(m.Value, thumbnail);
                     foreach (Match m2 in collectionThumbnail)
                     {
                         gevondenThumbnail = m2.Groups[2].Value;
-                        //Debug.WriteLine("Gevonden thumbnailUrl: " + gevondenThumbnail);
                     }
 
                 }
@@ -227,11 +198,6 @@ namespace Vidarr.Classes
             {
                 Debug.WriteLine("getKeywords() geeft NullReferenceException: " + e.Message);
             }
-
         }
-
-
     }
-
-    
 }

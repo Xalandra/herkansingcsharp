@@ -8,18 +8,17 @@ using Windows.Web.Http;
 
 namespace Vidarr.Classes
 {
-    class MaakHttpClient
+    class HTTPFactory
     {
         public HttpClient httpClient;
 
-        public MaakHttpClient() {
-            //httpClient = maakHttpClientAan();
+        public HTTPFactory() {
             Task.Factory.StartNew(()=> {
-                httpClient = maakHttpClientAan();
+                httpClient = createHTTPClient();
             });
         }
 
-        public HttpClient maakHttpClientAan()
+        public HttpClient createHTTPClient()
         {
             //Create an HTTP client object
             HttpClient httpClient = new HttpClient();
@@ -40,7 +39,7 @@ namespace Vidarr.Classes
             return httpClient;
         }
 
-        public async Task<string> doeHttpRequestYoutubeMetZoektermEnGeefResults(string zoekterm)
+        public async Task<string> YoutubeSearchResults(string zoekterm)
         {
             Uri requestUri = new Uri("https://www.youtube.com/results?search_query=" + zoekterm);
             //Send the GET request asynchronously and retrieve the response as a string.
@@ -49,7 +48,7 @@ namespace Vidarr.Classes
             try
             {
                 //Send the GET request
-                //krijgen text/html terug, await = wacht totdat antwoord is
+                //Returns text/html, await = wait for response
                 httpResponse = await httpClient.GetAsync(requestUri);
                 httpResponse.EnsureSuccessStatusCode();
                 httpResponseBody = await httpResponse.Content.ReadAsStringAsync();
@@ -61,7 +60,7 @@ namespace Vidarr.Classes
             return httpResponseBody;
         }
 
-        public async Task<string> makeHTTPRequestAndGiveResults(string url)
+        public async Task<string> YoutubeCrawlRequest(string url)
         {
             Uri requestUri = new Uri(url);
             //Send the GET request asynchronously and retrieve the response as a string.
@@ -70,7 +69,7 @@ namespace Vidarr.Classes
             try
             {
                 //Send the GET request
-                //krijgen text/html terug, await = wacht totdat antwoord is
+                //Returns text/html, await = wait for response
                 httpResponse = await httpClient.GetAsync(requestUri);
                 httpResponse.EnsureSuccessStatusCode();
                 httpResponseBody = await httpResponse.Content.ReadAsStringAsync();

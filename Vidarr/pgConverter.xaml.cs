@@ -23,9 +23,7 @@ using System.Diagnostics;
 
 namespace Vidarr
 {
-    /// <summary>
-    /// An empty page that can be used on its own or navigated to within a Frame.
-    /// </summary>
+
     public sealed partial class pgConverter : Page
     {
         public StorageFile file1;
@@ -62,7 +60,6 @@ namespace Vidarr
                     files.Add(file3);
                 }
                 conv.ConvertChosenMedia(files, selectionBox);
-                //conv.PickMedia();
             }
             else
             {
@@ -73,16 +70,16 @@ namespace Vidarr
 
         private async void selectFile(object sender, RoutedEventArgs e)
         {
-            //Maak een nieuwe FileOpenPicker aan
+            //Create new FileOpenPicker
             FileOpenPicker openPicker = new FileOpenPicker();
 
-            //Kies welke weergave het moet hebben
+            //Choose Picker view
             openPicker.ViewMode = PickerViewMode.Thumbnail;
 
-            //STandaard openings plek
+            //Default open
             openPicker.SuggestedStartLocation = PickerLocationId.MusicLibrary;
 
-            //Bestands extensies die toegelaten worden
+            //Accepted file extensions
             openPicker.FileTypeFilter.Add(".mp3");
             openPicker.FileTypeFilter.Add(".mp4");
             openPicker.FileTypeFilter.Add(".wma");
@@ -90,10 +87,8 @@ namespace Vidarr
             openPicker.FileTypeFilter.Add(".flv");
             openPicker.FileTypeFilter.Add(".avi");
 
-            //Hier geven we de type selectie weer, single of multiple
-            //StorageFile file = await openPicker.PickSingleFileAsync();
+            //Show type selection, single or multiple
             StorageFile file = await openPicker.PickSingleFileAsync();
-            //MULTIPLE SELECTIE::: StorageFile file = await openPicker.PickMultipleFilesAsync();
 
             if (file != null)
             {
@@ -120,29 +115,25 @@ namespace Vidarr
         {
             while (true)
             {
-                List<Converted> bestandenLijstDownloadsVidarrMap = new List<Converted>();
+                List<Converted> downloadedFileList = new List<Converted>();
                 StorageFolder picturesFolder = KnownFolders.VideosLibrary;
                 IReadOnlyList<IStorageItem> itemsList = await picturesFolder.GetItemsAsync();
                 foreach (var item in itemsList)
                 {
                     if (item is StorageFolder)
                     {
-                        //outputText.Append(item.Name + " folder\n");
-
+                        
                     }
                     else
                     {
-                        //outputText.Append(item.Name + "\n");
                         string name = item.Name;
                         var iSize = await item.GetBasicPropertiesAsync();
                         string size = iSize.Size.ToString();
                         string ext = name.Substring(name.Length -4);
-                        bestandenLijstDownloadsVidarrMap.Add(new Converted{ titel = name, grootte = size, extensie = ext });
+                        downloadedFileList.Add(new Converted{ titel = name, grootte = size, extensie = ext });
                     }
                 }
-
-                //listOfStudents.Add("John");
-                ListConvertedFiles.ItemsSource = bestandenLijstDownloadsVidarrMap;
+                ListConvertedFiles.ItemsSource = downloadedFileList;
                 await Task.Delay(10000);
             }
         }

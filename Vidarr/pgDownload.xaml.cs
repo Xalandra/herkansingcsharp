@@ -25,13 +25,11 @@ using YoutubeExtractor;
 
 namespace Vidarr
 {
-    /// <summary>
-    /// An empty page that can be used on its own or navigated to within a Frame.
-    /// </summary>
+
     public sealed partial class pgDownload : Page
     {
         ObservableCollection<DownloadViewModel> downloadList = new ObservableCollection<DownloadViewModel>();
-        List<string> teDownloaden = new List<string>();
+        List<string> toDownload = new List<string>();
         Object locker = new object();
         
         public pgDownload()
@@ -46,9 +44,9 @@ namespace Vidarr
 
         private void zoek(object sender, KeyRoutedEventArgs e)
         {
-            //check of enter is gebruik
+            //If enter pressed show message
             if (e.Key == Windows.System.VirtualKey.Enter)
-            { //do something here 
+            { 
                 Debug.WriteLine("Op enter gedrukt, gebruik vergrootglasknop");
                 
             }
@@ -63,14 +61,14 @@ namespace Vidarr
         {
             Debug.WriteLine("querysubmittedzoek; " + args.QueryText);
             string input = args.QueryText;
-            List<ResultZoekterm> resultatenLijst = new List<ResultZoekterm>();
+            List<SearchResult> listResults = new List<SearchResult>();
 
-            //zoek in database
-            bool welInDb = false;
-            Task<bool> zoekInDb = Task<bool>.Factory.StartNew(() => 
+            //Search in Database
+            bool availableInDb = false;
+            Task<bool> searchInDb = Task<bool>.Factory.StartNew(() => 
             {
                 List<string> output = new List<string>();
-                bool gelukt = false;
+                bool succeeded = false;
 
                 MySqlConnection conn;
                 string myConnectionString;
@@ -107,9 +105,8 @@ namespace Vidarr
                         thumbx = (string)reader["thumbnail"];
                         urlx += ";"+titlex+";"+thumbx;
 
-                        //Debug.WriteLine(urlx + "\n" + titlex + "\n" + descriptionx + "\n" + genrex + "\n" + thumbx + "\n");
-                        resultatenLijst.Add(new ResultZoekterm { url = urlx, titel = titlex, description = descriptionx, genre = genrex, thumb = thumbx });
-                        gelukt = true;
+                        listResults.Add(new SearchResult { url = urlx, titel = titlex, description = descriptionx, genre = genrex, thumb = thumbx });
+                        succeeded = true;
                     }
 
                     reader.Close();
@@ -121,22 +118,22 @@ namespace Vidarr
                     Debug.WriteLine(ex.Message);
                 }
 
-                return gelukt;
+                return succeeded;
             });
-            zoekInDb.Wait();
-            SearchWordResults.ItemsSource = resultatenLijst;
-            welInDb = await zoekInDb;
-            if (welInDb)
+            searchInDb.Wait();
+            SearchWordResults.ItemsSource = listResults;
+            availableInDb = await searchInDb;
+            if (availableInDb)
             {
                 Debug.WriteLine("Staat in database");
             }
             else
             {
-                //staat niet in db
-                //ga zoeken op zoekterm
+                //Cannot be found in database.
+                //Check search term.
                 Debug.WriteLine("Moet gaan zoeken op zoekterm");
 
-                await ZoekZoekterm.crawlZoekterm(input);
+                await Search.crawlerSearchterm(input);
 
                 Debug.WriteLine("Crawler is aan het zoeken, probeer het zo weer");
                 var dialog = new MessageDialog("Crawler is aan het zoeken, probeer het zo weer");
@@ -146,38 +143,35 @@ namespace Vidarr
 
         private void downloadSelectedMPFour(object sender, RoutedEventArgs e)
         {
-            //url uit aangevinkt resultaat
-            List<string> aangevinkt = new List<string>();
+            //Get URL from selected results
+            List<string> selected = new List<string>();
             lock (this.locker)
             {
-                aangevinkt = teDownloaden;
+                selected = toDownload;
 
-                //tedownloadenlijst weer leeg
-                teDownloaden = new List<string>();
+                //toDownload list emptying
+                toDownload = new List<string>();
             }
-            foreach (string url in aangevinkt)
+            foreach (string url in selected)
             {
-                string[] ontleden = url.Split(';');
-                Debug.WriteLine("URL ontleden[0]: " + ontleden[0]);
-                IEnumerable<VideoInfo> videosInfors = DownloadUrlResolver.GetDownloadUrls(ontleden[0]);
+                string[] dissect = url.Split(';');
+                Debug.WriteLine("URL dissect[0]: " + dissect[0]);
+                IEnumerable<VideoInfo> videosInfors = DownloadUrlResolver.GetDownloadUrls(dissect[0]);
 
                 VideoInfo video = videosInfors.First(infor => infor.VideoType == VideoType.Mp4);
 
-                downloadList.Add(new DownloadViewModel(video.DownloadUrl, video.Title, ontleden[2], video.VideoExtension));
+                downloadList.Add(new DownloadViewModel(video.DownloadUrl, video.Title, dissect[2], video.VideoExtension));
                 lstDownload.ItemsSource = downloadList;
-                //textBox.Text = id[1];
-            }
-
-                  
+            }            
         }
 
         private void saveCheckedUrl(object sender, RoutedEventArgs e)
         {
-            CheckBox geselecteerdeBox = sender as CheckBox;
+            CheckBox selectedBox = sender as CheckBox;
             string url = "";
             try
             {
-                url = geselecteerdeBox.Content.ToString();
+                url = selectedBox.Content.ToString();
             }
             catch (NullReferenceException ex)
             {
@@ -186,11 +180,8 @@ namespace Vidarr
             Debug.WriteLine(url);
             if (!url.Equals(""))
             {
-                teDownloaden.Add(url);
+                toDownload.Add(url);
             }
         }
-
-        
-
     }
 }
