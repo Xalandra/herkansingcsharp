@@ -130,7 +130,7 @@ namespace Vidarr
                         var iSize = await item.GetBasicPropertiesAsync();
                         string size = iSize.Size.ToString();
                         string ext = name.Substring(name.Length -4);
-                        downloadedFileList.Add(new Converted{ titel = name, grootte = size, extensie = ext });
+                        downloadedFileList.Add(new Converted{ titel = name.Remove(item.Name.Length - 4), grootte = size, extensie = ext.ToLower() });
                     }
                 }
                 ListConvertedFiles.ItemsSource = downloadedFileList;
