@@ -9,8 +9,8 @@ namespace Vidarr.Classes
 {
     class Converted
     {
-        public string titel { get; set; }
-        public string grootte { get; set; }
-        public string extensie { get; set; }
+        public string fileTitle { get; set; }
+        public string fileSize { get; set; }
+        public string fileExtension { get; set; }
     }
 }
