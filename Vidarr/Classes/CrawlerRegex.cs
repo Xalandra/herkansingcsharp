@@ -55,23 +55,22 @@ namespace Vidarr.Classes
         static public List<string> regexUrls(string response)
         {
             int maxUrls = 50;
-            int gevondenUrls = 0;
+            int foundUrls = 0;
             Object thisLocker = new object();
 
             //Fetch URL from body
             List<string> urls = new List<string>();
-            string vorigGevondenUrl = "";
+            string previousFoundUrl = "";
             string url = "";
-            string patternUrls = "href\\s*=\\s*(?:[\"'](?<1>[^\"']*)[\"']|(?<1>\\S+))"; //beste regex
+            string patternUrls = "href\\s*=\\s*(?:[\"'](?<1>[^\"']*)[\"']|(?<1>\\S+))"; //best regex
 
             //Fetch URL
             MatchCollection collection = Regex.Matches(response, patternUrls);
             foreach (Match m in collection)
             {
                 //Check for max 10 urls found
-                if (gevondenUrls < maxUrls)
+                if (foundUrls < maxUrls)
                 {
-
                     //Check for valid URL
                     if (m.Success)
                     {
@@ -83,23 +82,25 @@ namespace Vidarr.Classes
                         if (url.Contains("/watch?"))
                         {
                             url = "https://www.youtube.com" + url;
-                        }
-                        if (url.Contains("www.youtube.com") && !url.Contains("channel") && !url.Contains("user") && !url.Contains("playlist") && !url.Contains("feed") && !url.Contains("bit.ly") && !url.Contains("accounts.google") && !url.Contains("android-app"))
-                        {
-                            bool isUri = Uri.IsWellFormedUriString(url, UriKind.RelativeOrAbsolute);
-                            //Check correct URL, not 10 urls added, last added url wasn't the same.
-                            if (isUri && (gevondenUrls < maxUrls) && !vorigGevondenUrl.Equals(url))
-                            {
-                                lock (thisLocker)
-                                {
-                                    urls.Add(url);
 
-                                    //Prevent double URLs
-                                    vorigGevondenUrl = url;
+                            if (url.Contains("www.youtube.com") && !url.Contains("channel") && !url.Contains("user") && !url.Contains("playlist") && !url.Contains("feed") && !url.Contains("bit.ly") && !url.Contains("accounts.google") && !url.Contains("android-app") && url.Length < 51)
+                            {
+                                bool isUri = Uri.IsWellFormedUriString(url, UriKind.RelativeOrAbsolute);
+                                //Check correct URL, not 10 urls added, last added url wasn't the same.
+                                if (isUri && (foundUrls < maxUrls) && !previousFoundUrl.Equals(url))
+                                {
+                                    lock (thisLocker)
+                                    {
+                                        urls.Add(url);
+
+                                        //Prevent double URLs
+                                        previousFoundUrl = url;
+                                    }
+                                    foundUrls++;
                                 }
-                                gevondenUrls++;
                             }
                         }
+                        
                     }
                 }
                 else
@@ -130,14 +131,16 @@ namespace Vidarr.Classes
             MatchCollection collectionGenre;
             MatchCollection collectionThumbnail;
 
+            dbConn dbConnection = new dbConn();
+
             try
             {
                 collection = Regex.Matches(response, pattern);
-                string gevondenUrl = "https://www.youtube.com/watch?v=";
-                string gevondenTitle = "";
-                string gevondenDescription = "";
-                string gevondenGenre = "";
-                string gevondenThumbnail = "";
+                string foundUrl = "https://www.youtube.com/watch?v=";
+                string foundTitle = "";
+                string foundDescription = "";
+                string foundGenre = "";
+                string foundThumbnail = "";
                 foreach (Match m in collection)
                 {
                     //Check matched resulsts
@@ -146,63 +149,41 @@ namespace Vidarr.Classes
                     collectionUrl = Regex.Matches(m.Value, videoId);
                     foreach (Match m2 in collectionUrl)
                     {
-                        gevondenUrl += m2.Groups[2].Value;
+                        foundUrl += m2.Groups[2].Value;
                     }
                     collectionTitle = Regex.Matches(m.Value, title);
                     foreach (Match m2 in collectionTitle)
                     {
-                        gevondenTitle = m2.Groups[2].Value;
+                        foundTitle = m2.Groups[2].Value;
                     }
                     collectionDescription = Regex.Matches(m.Value, description);
                     foreach (Match m2 in collectionDescription)
                     {
-                        gevondenDescription = m2.Groups[2].Value;
+                        foundDescription = m2.Groups[2].Value;
                     }
                     collectionGenre = Regex.Matches(m.Value, genre);
                     foreach (Match m2 in collectionGenre)
                     {
-                        gevondenGenre = m2.Groups[2].Value;                        
+                        foundGenre = m2.Groups[2].Value;                        
                     }
                     collectionThumbnail = Regex.Matches(m.Value, thumbnail);
                     foreach (Match m2 in collectionThumbnail)
                     {
-                        gevondenThumbnail = m2.Groups[2].Value;
+                        foundThumbnail = m2.Groups[2].Value;
                     }
 
                 }
-
+                
                 //keywords in database
-
-                dbConn dbConnection = new dbConn();
-                dbConnection.insertQuery("INSERT INTO video(Url, Title, Description, Genre, Thumbnail) VALUES('"+ gevondenUrl + "', '" + gevondenTitle + "', '" + gevondenDescription + "', '" + gevondenGenre + "', '" + gevondenThumbnail + "')");
-                dbConnection.dbClose();
-                //MySqlConnection conn;
-                //string myConnectionString;
-
-                //myConnectionString = "Server=127.0.0.1;Database=vidarr;Uid=root;Pwd='';SslMode=None;charset=utf8";
-
-                //try
-                //{
-                //    conn = new MySqlConnection(myConnectionString);
-                //    MySqlCommand cmd = new MySqlCommand();
-
-                //    cmd.CommandText = "INSERT INTO video(Url,Title,Description,Genre,Thumbnail) VALUES('"+ gevondenUrl + "','" + gevondenTitle + "','" + gevondenDescription + "','" + gevondenGenre + "','" + gevondenThumbnail + "')";
-                //    conn.Open();
-                //    cmd.CommandType = CommandType.Text;
-                //    cmd.Connection = conn;
-                //    cmd.ExecuteNonQuery();
-                //    conn.Close();
-                //}
-                //catch (Exception ex)
-                //{
-                //    Debug.WriteLine(ex.Message);
-
-                //}
+                dbConnection.insertQuery("INSERT INTO video(Url, Title, Description, Genre, Thumbnail) VALUES('" + foundUrl + "', '" + foundTitle + "', '" + foundDescription + "', '" + foundGenre + "', '" + foundThumbnail + "')");
+                
             }
             catch (NullReferenceException e)
             {
                 Debug.WriteLine("getKeywords() geeft NullReferenceException: " + e.Message);
             }
+            dbConnection.dbClose();
         }
+
     }
 }
