@@ -42,16 +42,6 @@ namespace Vidarr
             this.Frame.Navigate(typeof(pgConverter));
         }
 
-        private void zoek(object sender, KeyRoutedEventArgs e)
-        {
-            //If enter pressed show message
-            if (e.Key == Windows.System.VirtualKey.Enter)
-            { 
-                Debug.WriteLine("Op enter gedrukt, gebruik vergrootglasknop");
-                
-            }
-        }
-
         private void lstDownload_LayoutUpdated(object sender, object e)
         {
             lstDownload.Width = gridRoot.ActualWidth;

@@ -16,6 +16,9 @@ using Windows.UI.Popups;
 
 namespace Vidarr
 {
+    /// <summary>
+    /// Gebruik gemaakt van de code van Microsoft: https://docs.microsoft.com/en-us/windows/uwp/audio-video-camera/transcode-media-files
+    /// </summary>
     public partial class Convert
     {
         AsyncLock bouncer = new AsyncLock();
