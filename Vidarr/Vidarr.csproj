@@ -100,9 +100,9 @@
     <Compile Include="Classes\Crawler.cs" />
     <Compile Include="Classes\CrawlerRegex.cs" />
     <Compile Include="Classes\dbConn.cs" />
-    <Compile Include="Classes\MaakHttpClient.cs" />
-    <Compile Include="Classes\ResultZoekterm.cs" />
-    <Compile Include="Classes\ZoekZoekterm.cs" />
+    <Compile Include="Classes\HTTPFactory.cs" />
+    <Compile Include="Classes\Search.cs" />
+    <Compile Include="Classes\SearchResult.cs" />
     <Compile Include="DownloadModelView.cs" />
     <Compile Include="LandingPage.xaml.cs">
       <DependentUpon>LandingPage.xaml</DependentUpon>
@@ -171,7 +171,7 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="MySql.Data.RT">
-      <HintPath>C:\Users\Xalandra\Downloads\Vidarr\database dll\MySql.Data.RT.dll</HintPath>
+      <HintPath>..\..\..\Connector\MySql.Data.RT.dll</HintPath>
     </Reference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
