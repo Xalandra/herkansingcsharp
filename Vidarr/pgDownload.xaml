@@ -23,12 +23,12 @@
 
                         <Setter Target="DownloadInMP4Button.FontSize" Value="14" />
                         <Setter Target="DownloadInMP4Button.Padding" Value="10" />
-                        <Setter Target="DownloadInMP4Button.Margin" Value="30,0,30,90" />
+                        <Setter Target="DownloadInMP4Button.Margin" Value="33,0,33,90" />
                         <Setter Target="DownloadInMP4Button.HorizontalAlignment" Value="Stretch" />
                         
                         <Setter Target="DownloadInMP3Button.FontSize" Value="14" />
                         <Setter Target="DownloadInMP3Button.Padding" Value="10" />
-                        <Setter Target="DownloadInMP3Button.Margin" Value="30,0,30,30" />
+                        <Setter Target="DownloadInMP3Button.Margin" Value="33,0,33,33" />
                         <Setter Target="DownloadInMP3Button.HorizontalAlignment" Value="Stretch" />
 
                         <!-- Setters for right half -->
@@ -54,7 +54,7 @@
 
                         <Setter Target="DownloadInMP3Button.FontSize" Value="20" />
                         <Setter Target="DownloadInMP3Button.Padding" Value="16" />
-                        <Setter Target="DownloadInMP3Button.Margin" Value="260,0,0,30" />
+                        <Setter Target="DownloadInMP3Button.Margin" Value="260,0,0,33" />
 
                         <!-- Setters for right half -->
                         <Setter Target="DownloadslistLabel.FontSize" Value="20" />
@@ -79,7 +79,7 @@
 
                         <Setter Target="DownloadInMP3Button.FontSize" Value="28" />
                         <Setter Target="DownloadInMP3Button.Padding" Value="24" />
-                        <Setter Target="DownloadInMP3Button.Margin" Value="350,0,0,30" />
+                        <Setter Target="DownloadInMP3Button.Margin" Value="350,0,0,33" />
 
                         <!-- Setters for right half -->
                         <Setter Target="DownloadslistLabel.FontSize" Value="28" />
@@ -196,7 +196,7 @@
             </ListView>
 
             <Grid>
-                <Button x:Name="DownloadInMP4Button" Content="Download in .MP4" HorizontalAlignment="Left" Margin="28,0,0,30" VerticalAlignment="Bottom" Click="downloadSelectedMPFour" FontWeight="Bold" />
+                <Button x:Name="DownloadInMP4Button" Content="Download in .MP4" HorizontalAlignment="Left" Margin="33,0,0,33" VerticalAlignment="Bottom" Click="downloadSelectedMPFour" FontWeight="Bold" />
                 <Button x:Name="DownloadInMP3Button" Content="Download in .MP3" HorizontalAlignment="Left" VerticalAlignment="Bottom" FontWeight="Bold" />
             </Grid>
 
@@ -280,7 +280,7 @@
                 </ListView.ItemTemplate>
             </ListView>
 
-            <Button x:Name="GoToConverterButton" Content="Go To Converter" HorizontalAlignment="Right" Margin="0,0,30,30" VerticalAlignment="Bottom" Height="32" Width="149" Click="goToConverterScreen"/>
+            <Button x:Name="GoToConverterButton" Content="Converter pagina" HorizontalAlignment="Right" Margin="0,0,33,33" VerticalAlignment="Bottom" Height="32" Width="149" Click="goToConverterScreen"/>
         </Grid>
 
     </Grid>

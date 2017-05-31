@@ -361,7 +361,7 @@
                 </ListView.ItemTemplate>
             </ListView>
 
-            <Button Name="GoToDownloaderButton" Content="Go To Downloader" HorizontalAlignment="Right" Margin="0,0,33,33" VerticalAlignment="Bottom" Height="32" Width="149" Click="goToDownloaderScreen"/>
+            <Button Name="GoToDownloaderButton" Content="Download pagina" HorizontalAlignment="Right" Margin="0,0,33,33" VerticalAlignment="Bottom" Height="32" Width="149" Click="goToDownloaderScreen"/>
         
         </Grid>
 
