@@ -120,17 +120,17 @@ namespace Vidarr
                 IReadOnlyList<IStorageItem> itemsList = await picturesFolder.GetItemsAsync();
                 foreach (var item in itemsList)
                 {
-                    if (item is StorageFolder)
-                    {
-                        
-                    }
-                    else
+                    if (!(item is StorageFolder))
                     {
                         string name = item.Name;
                         var iSize = await item.GetBasicPropertiesAsync();
                         string size = iSize.Size.ToString();
-                        string ext = name.Substring(name.Length -4);
-                        downloadedFileList.Add(new Converted{ fileTitle = name.Remove(item.Name.Length - 4), fileSize = size, fileExtension = ext.ToLower() });
+                        string ext = name.Substring(name.Length - 4);
+                        downloadedFileList.Add(new Converted {
+                            fileTitle = name.Remove(item.Name.Length - 4),
+                            fileSize = size,
+                            fileExtension = ext.ToLower()
+                        });
                     }
                 }
                 ListConvertedFiles.ItemsSource = downloadedFileList;
