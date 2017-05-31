@@ -814,18 +814,6 @@
             "assetType": "native",
             "rid": "osx-x64"
           },
-          "runtimes/win10-arm/nativeassets/uap10.0/sqlite3.dll": {
-            "assetType": "native",
-            "rid": "win10-arm"
-          },
-          "runtimes/win10-x64/nativeassets/uap10.0/sqlite3.dll": {
-            "assetType": "native",
-            "rid": "win10-x64"
-          },
-          "runtimes/win10-x86/nativeassets/uap10.0/sqlite3.dll": {
-            "assetType": "native",
-            "rid": "win10-x86"
-          },
           "runtimes/win7-x64/native/sqlite3.dll": {
             "assetType": "native",
             "rid": "win7-x64"
@@ -3793,9 +3781,6 @@
         },
         "runtime": {
           "lib/netstandard1.0/_._": {}
-        },
-        "native": {
-          "runtimes/win10-arm/nativeassets/uap10.0/sqlite3.dll": {}
         }
       },
       "System.AppContext/4.3.0": {
@@ -6610,9 +6595,6 @@
         },
         "runtime": {
           "lib/netstandard1.0/_._": {}
-        },
-        "native": {
-          "runtimes/win10-arm/nativeassets/uap10.0/sqlite3.dll": {}
         }
       },
       "System.AppContext/4.3.0": {
@@ -9399,7 +9381,7 @@
           "lib/netstandard1.0/_._": {}
         },
         "native": {
-          "runtimes/win10-x64/nativeassets/uap10.0/sqlite3.dll": {}
+          "runtimes/win7-x64/native/sqlite3.dll": {}
         }
       },
       "System.AppContext/4.3.0": {
@@ -12225,7 +12207,7 @@
           "lib/netstandard1.0/_._": {}
         },
         "native": {
-          "runtimes/win10-x64/nativeassets/uap10.0/sqlite3.dll": {}
+          "runtimes/win7-x64/native/sqlite3.dll": {}
         }
       },
       "System.AppContext/4.3.0": {
@@ -15012,7 +14994,7 @@
           "lib/netstandard1.0/_._": {}
         },
         "native": {
-          "runtimes/win10-x86/nativeassets/uap10.0/sqlite3.dll": {}
+          "runtimes/win7-x86/native/sqlite3.dll": {}
         }
       },
       "System.AppContext/4.3.0": {
@@ -17838,7 +17820,7 @@
           "lib/netstandard1.0/_._": {}
         },
         "native": {
-          "runtimes/win10-x86/nativeassets/uap10.0/sqlite3.dll": {}
+          "runtimes/win7-x86/native/sqlite3.dll": {}
         }
       },
       "System.AppContext/4.3.0": {
@@ -20063,9 +20045,8 @@
       ]
     },
     "Microsoft.NETCore.UniversalWindowsPlatform/5.2.3": {
-      "sha512": "j9TvGPvxH42R7hZ4AzhSO7WdWWbDxtw69RbM2YzV2wAOnUf8MHRv3DTRT1oV0amPW779/HLr7YJuRF6QByaOAA==",
+      "sha512": "xsOO1wxNtqhPdYoNfI96fTG9xrECOqBmqwVbarRuQinQ+sZKSI604Bi2S2cPHHAogHwbs3Lzgooi5KYffvOlpQ==",
       "type": "package",
-      "path": "Microsoft.NETCore.UniversalWindowsPlatform/5.2.3",
       "files": [
         "Microsoft.NETCore.UniversalWindowsPlatform.5.2.3.nupkg.sha512",
         "Microsoft.NETCore.UniversalWindowsPlatform.nuspec",
@@ -26421,7 +26402,5 @@
       "YoutubeExtractor >= 0.10.11"
     ],
     "UAP,Version=v10.0": []
-  },
-  "tools": {},
-  "projectFileToolGroups": {}
+  }
 }

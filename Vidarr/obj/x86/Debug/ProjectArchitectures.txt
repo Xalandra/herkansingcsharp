@@ -1,1 +1,1 @@
-C:\Stenden\Jaar 3\4.0 Herkansingen\C# Multithreading\Vidarr5.3\Vidarr\Vidarr.csproj;x86
+D:\Software\GitHub Desktop\herkansingcsharp\Vidarr\Vidarr.csproj;x86

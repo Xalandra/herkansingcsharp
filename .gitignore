@@ -7,3 +7,16 @@ Vidarr/Vidarr.csproj
 Vidarr/project.lock.json
 Vidarr/project.json
 Vidarr/Vidarr.csproj
+*.xml
+*.xbf
+*.cs
+*.winmd
+*.appxrecipe
+*.pri
+*.xaml
+*.intermediate
+*.resfiles
+*.json
+*.csproj
+*.txt
+*.state
