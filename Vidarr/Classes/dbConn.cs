@@ -10,27 +10,58 @@ namespace Vidarr.Classes
 {
     class dbConn
     {
-        public static void dbConnection()
-        {
-            MySqlConnection conn;
-            string myConnectionString;
+        MySqlConnection conn;
+        string myConnectionString;
 
+        public dbConn() {
             myConnectionString = "Server=127.0.0.1;Database=vidarr;Uid=root;Pwd='';SslMode=None;charset=utf8";
 
             try
             {
                 conn = new MySqlConnection(myConnectionString);
-                MySqlCommand cmd = new MySqlCommand();
-
-                cmd.CommandText = "truncate video";
                 conn.Open();
+            }
+            catch (Exception)
+            {
+                ErrorDialog.showMessage("Fout bij dbConn constructor");
+            }
+        }
+        public void dbTruncate()
+        {
+            try { 
+                MySqlCommand cmd = new MySqlCommand();
+                cmd.CommandText = "truncate video";
+
+                cmd.CommandType = CommandType.Text;
+                cmd.Connection = conn;
+                cmd.ExecuteNonQuery();
+
+                dbClose();
+            }
+            catch (Exception)
+            {
+                ErrorDialog.showMessage("Fout bij dbTruncate");
+            }
+        }
+
+        public void dbClose()
+        {
+            conn.Close();
+        }
+
+        public void insertQuery(string query)
+        {
+            try { 
+                MySqlCommand cmd = new MySqlCommand();
+                cmd.CommandText = query;
+
                 cmd.CommandType = CommandType.Text;
                 cmd.Connection = conn;
                 cmd.ExecuteNonQuery();
             }
-            catch (MySqlException ex)
+            catch (Exception ex)
             {
-                var dialog = new MessageDialog(ex.Message);
+                ErrorDialog.showMessage("Fout bij insertQuery" + ex.Message);
             }
         }
     }

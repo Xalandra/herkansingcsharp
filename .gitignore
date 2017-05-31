@@ -9,11 +9,9 @@ Vidarr/project.json
 Vidarr/Vidarr.csproj
 *.xml
 *.xbf
-*.cs
 *.winmd
 *.appxrecipe
 *.pri
-*.xaml
 *.intermediate
 *.resfiles
 *.json

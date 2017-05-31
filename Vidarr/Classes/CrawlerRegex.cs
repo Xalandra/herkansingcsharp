@@ -172,27 +172,32 @@ namespace Vidarr.Classes
                 }
 
                 //keywords in database
-                MySqlConnection conn;
-                string myConnectionString;
 
-                myConnectionString = "Server=127.0.0.1;Database=vidarr;Uid=root;Pwd='';SslMode=None;charset=utf8";
+                dbConn dbConnection = new dbConn();
+                dbConnection.insertQuery("INSERT INTO video(Url, Title, Description, Genre, Thumbnail) VALUES('"+ gevondenUrl + "', '" + gevondenTitle + "', '" + gevondenDescription + "', '" + gevondenGenre + "', '" + gevondenThumbnail + "')");
+                dbConnection.dbClose();
+                //MySqlConnection conn;
+                //string myConnectionString;
 
-                try
-                {
-                    conn = new MySqlConnection(myConnectionString);
-                    MySqlCommand cmd = new MySqlCommand();
+                //myConnectionString = "Server=127.0.0.1;Database=vidarr;Uid=root;Pwd='';SslMode=None;charset=utf8";
 
-                    cmd.CommandText = "INSERT INTO video(Url,Title,Description,Genre,Thumbnail) VALUES('"+ gevondenUrl + "','" + gevondenTitle + "','" + gevondenDescription + "','" + gevondenGenre + "','" + gevondenThumbnail + "')";
-                    conn.Open();
-                    cmd.CommandType = CommandType.Text;
-                    cmd.Connection = conn;
-                    cmd.ExecuteNonQuery();
-                }
-                catch (MySqlException ex)
-                {
-                    Debug.WriteLine(ex.Message);
+                //try
+                //{
+                //    conn = new MySqlConnection(myConnectionString);
+                //    MySqlCommand cmd = new MySqlCommand();
 
-                }
+                //    cmd.CommandText = "INSERT INTO video(Url,Title,Description,Genre,Thumbnail) VALUES('"+ gevondenUrl + "','" + gevondenTitle + "','" + gevondenDescription + "','" + gevondenGenre + "','" + gevondenThumbnail + "')";
+                //    conn.Open();
+                //    cmd.CommandType = CommandType.Text;
+                //    cmd.Connection = conn;
+                //    cmd.ExecuteNonQuery();
+                //    conn.Close();
+                //}
+                //catch (Exception ex)
+                //{
+                //    Debug.WriteLine(ex.Message);
+
+                //}
             }
             catch (NullReferenceException e)
             {

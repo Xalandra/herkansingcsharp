@@ -351,7 +351,7 @@
                                     <TextBlock x:Name="FileNameConvertedFiles" FontStyle="Italic" TextWrapping="Wrap" Foreground="Black" Text="{Binding fileTitle}" TextAlignment="Justify" />
                                 </StackPanel>
                                 <StackPanel Orientation="Vertical" Padding="10,0,0,10">
-                                    <TextBlock x:Name="ExtensionConvertedFiles" HorizontalAlignment="Right" TextWrapping="Wrap" Foreground="DarkGray" Text="{Binding fileExtention}" TextAlignment="Right" Padding="0,0,0,5" />
+                                    <TextBlock x:Name="ExtensionConvertedFiles" HorizontalAlignment="Right" TextWrapping="Wrap" Foreground="DarkGray" Text="{Binding fileExtension}" TextAlignment="Right" Padding="0,0,0,5" />
                                     <TextBlock x:Name="SizeConvertedFiles" HorizontalAlignment="Right" TextWrapping="Wrap" Foreground="DarkGray" Text="{Binding fileSize}" TextAlignment="Right" />
                                 </StackPanel>
 
