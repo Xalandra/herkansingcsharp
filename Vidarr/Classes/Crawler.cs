@@ -53,7 +53,9 @@ namespace Vidarr.Classes
         //Function responsible of clearing database of queries before the crawler can start.
         public void emptyDatabase()
         {
-            dbConn.dbConnection();
+            dbConn dbConnection = new dbConn();
+            dbConnection.dbTruncate();
+            dbConnection.dbClose();
         }
 
         //This gives the crawler a starting point without user input.

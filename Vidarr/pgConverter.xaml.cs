@@ -63,8 +63,7 @@ namespace Vidarr
             }
             else
             {
-                var dialog = new MessageDialog("Oeps er ging iets mis, heeft u een bestand geselecteerd? Heeft u geselecteerd waar het bestand naar geconverteerd moet worden?");
-                dialog.ShowAsync();
+                ErrorDialog.showMessage("Oeps er ging iets mis, heeft u een bestand geselecteerd? Heeft u geselecteerd waar het bestand naar geconverteerd moet worden?");
             }
         }
 

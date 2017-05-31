@@ -60,32 +60,20 @@ namespace Vidarr
                 List<string> output = new List<string>();
                 bool succeeded = false;
 
-                MySqlConnection conn;
-                string myConnectionString;
-
-                myConnectionString = "Server=127.0.0.1;Database=vidarr;Uid=root;Pwd='';SslMode=None;charset=utf8";
+                dbConn dbConnection = new dbConn();
 
                 try
-                {
-                    EncodingProvider ppp;
-                    ppp = CodePagesEncodingProvider.Instance;
-                    Encoding.RegisterProvider(ppp);
+                { 
+                    MySqlCommand cmd = dbConnection.selectQuery("SELECT * FROM video WHERE title LIKE '%" + input + "%' ORDER BY id DESC LIMIT 0,4");
 
-                    conn = new MySqlConnection(myConnectionString);
-                    MySqlCommand cmd;
-
-                    conn.Open();
-                    string query = "SELECT * FROM video WHERE title LIKE '%" + input + "%' ORDER BY id DESC LIMIT 0,4";
+                    MySqlDataReader reader = cmd.ExecuteReader();
 
                     string urlx;
                     string titlex;
                     string descriptionx;
                     string genrex;
                     string thumbx;
-
-                    cmd = new MySqlCommand(query, conn);
-                    MySqlDataReader reader = cmd.ExecuteReader();
-
+                    
                     while (reader.Read())
                     {
                         urlx = (string)reader["url"];
@@ -100,34 +88,24 @@ namespace Vidarr
                     }
 
                     reader.Close();
-
-                    
                 }
                 catch (MySqlException ex)
                 {
                     Debug.WriteLine(ex.Message);
                 }
 
+                dbConnection.dbClose();
                 return succeeded;
             });
             searchInDb.Wait();
             SearchWordResults.ItemsSource = listResults;
             availableInDb = await searchInDb;
-            if (availableInDb)
-            {
-                Debug.WriteLine("Staat in database");
-            }
-            else
+            if (!availableInDb)
             {
                 //Cannot be found in database.
-                //Check search term.
-                Debug.WriteLine("Moet gaan zoeken op zoekterm");
-
                 await Search.crawlerSearchterm(input);
 
-                Debug.WriteLine("Crawler is aan het zoeken, probeer het zo weer");
-                var dialog = new MessageDialog("Crawler is aan het zoeken, probeer het zo weer");
-                await dialog.ShowAsync();
+                ErrorDialog.showMessage("Crawler is aan het zoeken, probeer het zo weer");
             }
         }
 
@@ -167,7 +145,6 @@ namespace Vidarr
             {
                 Debug.WriteLine(ex.Message);
             }
-            Debug.WriteLine(url);
             if (!url.Equals(""))
             {
                 toDownload.Add(url);
