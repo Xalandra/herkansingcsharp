@@ -108,8 +108,7 @@
             <AutoSuggestBox x:Name="SearchBox"
                             PlaceholderText="Search...."
                             Margin="33,110,33,0"
-                            QueryIcon="Find" 
-                            KeyUp="zoek" 
+                            QueryIcon="Find"
                             QuerySubmitted="querySubmittedZoek" Height="37" MinWidth="100"
                             
                             />
