@@ -64,6 +64,24 @@ namespace Vidarr.Classes
                 ErrorDialog.showMessage("Fout bij insertQuery" + ex.Message);
             }
         }
+
+        public MySqlCommand selectQuery(string query) {
+            try
+            {
+                EncodingProvider ppp;
+                ppp = CodePagesEncodingProvider.Instance;
+                Encoding.RegisterProvider(ppp);
+
+                MySqlCommand cmd = new MySqlCommand(query, conn);
+
+                return cmd;
+            }
+            catch (Exception ex)
+            {
+                ErrorDialog.showMessage("Fout bij insertQuery" + ex.Message);
+                return null;
+            }
+        }
     }
 }
 
