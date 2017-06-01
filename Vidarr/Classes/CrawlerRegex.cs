@@ -23,16 +23,7 @@ namespace Vidarr.Classes
             Match match = Regex.Match(response, patternBody, RegexOptions.IgnoreCase | RegexOptions.Singleline);
             if (match.Success)
             {
-                string str = null;
-                str = "livestream";
-                if( body.Contains(str) == true)
-                {
-                    Debug.WriteLine("ER ZIT LIVESTREAM IN, HALP");
-                }
-                else
-                {
-                    body = match.Value;
-                }        
+                body = match.Value;     
             }
             else
             {
