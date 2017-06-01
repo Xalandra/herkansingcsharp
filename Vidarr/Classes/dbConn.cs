@@ -14,7 +14,7 @@ namespace Vidarr.Classes
         string myConnectionString;
 
         public dbConn() {
-            myConnectionString = "Server=127.0.0.1;Database=vidarr;Uid=root;Pwd='';SslMode=None;charset=utf8";
+            myConnectionString = "Server=127.0.0.1;Database=vidarr;Uid=root;Pwd='';SslMode=None;charset=utf8mb4";
 
             try
             {
