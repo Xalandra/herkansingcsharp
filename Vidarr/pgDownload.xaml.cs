@@ -129,7 +129,6 @@ namespace Vidarr
             foreach (string url in selected)
             {
                 string[] dissect = url.Split(';');
-                Debug.WriteLine("URL dissect[0]: " + dissect[0]);
                 IEnumerable<VideoInfo> videosInfors = DownloadUrlResolver.GetDownloadUrls(dissect[0]);
 
                 VideoInfo video = videosInfors.First(infor => infor.VideoType == VideoType.Mp4);

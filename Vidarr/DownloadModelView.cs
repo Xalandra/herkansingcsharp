@@ -9,6 +9,7 @@ using Windows.Storage;
 using System.Text.RegularExpressions;
 using MySql.Data.MySqlClient;
 using System.IO;
+using Vidarr.Classes;
 
 namespace Vidarr
 {
@@ -51,7 +52,7 @@ namespace Vidarr
             }
             catch (Exception e)
             {
-                Debug.WriteLine(e.Message);
+                ErrorDialog.showMessage(e.Message);
             }
 
         }
