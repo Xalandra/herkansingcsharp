@@ -60,6 +60,14 @@ namespace Vidarr
                     files.Add(file3);
                 }
                 conv.ConvertChosenMedia(files, selectionBox);
+
+                // empty selected files to start clean in ui
+                file1 = null;
+                file2 = null;
+                file3 = null;
+                NameFirstChosenFile.Text = "Geen geselecteerd";
+                NameSecondChosenFile.Text = "Geen geselecteerd";
+                NameThirdChosenFile.Text = "Geen geselecteerd";
             }
             else
             {

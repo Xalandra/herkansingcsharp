@@ -271,6 +271,7 @@
                                     <StackPanel Orientation="Horizontal" Padding="0,0,0,5">
                                         <ProgressBar x:Name="DownloadingBar" Value="{Binding Percentage}"></ProgressBar>
                                         <TextBlock Text="{Binding Downloaded}" Margin="10,0"></TextBlock>
+                                        <TextBlock Text="{Binding Status}" Margin="10,0"></TextBlock>
                                     </StackPanel>
                                 </StackPanel>
 
