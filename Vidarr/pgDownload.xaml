@@ -186,7 +186,7 @@
                                     </Image>
                                 </StackPanel>
                                 <StackPanel x:Name="TitleFieldSearch" Grid.Row="0" Grid.Column="2" Orientation="Horizontal" HorizontalAlignment="Left">
-                                    <TextBlock x:Name="TitleSearchResult" TextWrapping="Wrap" Foreground="DarkGray" Text="{Binding titel}" Margin="5,10,0,0" ScrollViewer.VerticalScrollBarVisibility="Auto" VerticalAlignment="Top" HorizontalAlignment="Left" />
+                                    <TextBlock x:Name="TitleSearchResult" TextWrapping="Wrap" Foreground="DarkGray" Text="{Binding title}" Margin="5,10,0,0" ScrollViewer.VerticalScrollBarVisibility="Auto" VerticalAlignment="Top" HorizontalAlignment="Left" />
                                 </StackPanel>
 
                             </Grid>

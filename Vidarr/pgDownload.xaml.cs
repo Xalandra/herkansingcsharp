@@ -83,7 +83,13 @@ namespace Vidarr
                         thumbx = (string)reader["thumbnail"];
                         urlx += ";"+titlex+";"+thumbx;
 
-                        listResults.Add(new SearchResult { url = urlx, titel = titlex, description = descriptionx, genre = genrex, thumb = thumbx });
+                        listResults.Add(new SearchResult {
+                            url = urlx,
+                            title = titlex,
+                            description = descriptionx,
+                            genre = genrex,
+                            thumb = thumbx
+                        });
                         succeeded = true;
                     }
 
