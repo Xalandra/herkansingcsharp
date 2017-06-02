@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 using Windows.Storage;
 using Windows.Storage.Pickers;
@@ -24,12 +25,21 @@ namespace Vidarr.Classes
 
         int crawlerAmount;
 
+        static public CancellationTokenSource tokensource;
+        static public CancellationToken token;
+        static public void cancelAllTasks() {
+            tokensource.Cancel();
+        }
+
         public Crawler()
         {
             listURL = new List<string>();
             listResponses = new List<string>();
             listResponsesKeywords = new List<string>();
             locker = new Object();
+
+            tokensource = new CancellationTokenSource();
+            token = tokensource.Token;
 
             Task startupCrawling = new Task(() => 
             {
