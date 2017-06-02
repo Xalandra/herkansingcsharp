@@ -204,6 +204,16 @@
 
         <!-- right half -->
         <Grid Grid.Column="1" Grid.Row="0" BorderBrush="#FFD30000" BorderThickness="4,0,0,0">
+            <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Top">
+                <TextBlock Text="Pauzeer/Resume de crawler:" FontSize="10" Padding="0,0,5,0" />
+                <Button x:Name="ResumeTasksButton" HorizontalAlignment="Left" VerticalAlignment="Top" Click="resumeTasks" Padding="1" Margin="0,0,5,0">
+                    <Image Source="Assets/playsymbol.png" Width="10" />
+                </Button>
+                <Button x:Name="PauseTasksButton" HorizontalAlignment="Left" VerticalAlignment="Top" Click="pauseTasks" BorderThickness="2" Padding="1">
+                    <Image Source="Assets/pausesymbol.png" Width="10" />
+                </Button>
+            </StackPanel>
+            
             <TextBlock x:Name="DownloadslistLabel" TextWrapping="Wrap" Text="Geselecteerde media downloads:" VerticalAlignment="Top" />
 
             <ListView x:Name="lstDownload" LayoutUpdated="lstDownload_LayoutUpdated" Margin="33,110,33,0" HorizontalAlignment="Stretch" VerticalAlignment="Top" ScrollViewer.VerticalScrollBarVisibility="Visible">
@@ -281,7 +291,6 @@
                 </ListView.ItemTemplate>
             </ListView>
 
-            <Button x:Name="CancelTasks" Content="Stop crawler" HorizontalAlignment="Right" Margin="0,0,33,99" VerticalAlignment="Bottom" Height="32" Width="149" Click="cancelTasks"/>
             <Button x:Name="GoToConverterButton" Content="Converter pagina" HorizontalAlignment="Right" Margin="0,0,33,33" VerticalAlignment="Bottom" Height="32" Width="149" Click="goToConverterScreen"/>
         </Grid>
 

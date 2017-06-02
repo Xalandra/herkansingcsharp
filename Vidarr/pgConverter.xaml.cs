@@ -150,5 +150,15 @@ namespace Vidarr
             this.Frame.Navigate(typeof(pgDownload));
         }
 
+        private void pauseTasks(object sender, RoutedEventArgs e)
+        {
+            Crawler.pauseAllTasks();
+        }
+
+        private void resumeTasks(object sender, RoutedEventArgs e)
+        {
+            Crawler.resumeAllTasks();
+        }
+
     }
 }

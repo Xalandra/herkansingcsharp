@@ -156,9 +156,14 @@ namespace Vidarr
             }
         }
 
-        private void cancelTasks(object sender, RoutedEventArgs e)
+        private void pauseTasks(object sender, RoutedEventArgs e)
         {
-            Crawler.cancelAllTasks();
+            Crawler.pauseAllTasks();
+        }
+
+        private void resumeTasks(object sender, RoutedEventArgs e)
+        {
+            Crawler.resumeAllTasks();
         }
     }
 }

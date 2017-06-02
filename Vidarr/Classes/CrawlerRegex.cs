@@ -68,7 +68,7 @@ namespace Vidarr.Classes
             MatchCollection collection = Regex.Matches(response, patternUrls);
             foreach (Match m in collection)
             {
-                //Check for max 10 urls found
+                //Check for max 50 urls found
                 if (foundUrls < maxUrls)
                 {
                     //Check for valid URL

@@ -23,15 +23,9 @@ namespace Vidarr.Classes
         Object locker;
         bool bootingCrawler = false;
 
-        int crawlerAmount;
-
         static public CancellationTokenSource tokensource;
         static public CancellationToken token;
         static bool finished = false;
-        static public void cancelAllTasks() {
-            finished = true;
-            tokensource.Cancel();
-        }
 
         public Crawler()
         {
@@ -58,7 +52,7 @@ namespace Vidarr.Classes
             while (!bootingCrawler) {  }
 
             // start 10 tasks to crawl
-            for (int i = 0; i < 5; i++) {
+            for (int i = 0; i < 3; i++) {
                 Task.Factory.StartNew(() =>
                 {
                     crawlerGO();
@@ -79,9 +73,6 @@ namespace Vidarr.Classes
 
             //get body for crawler to work with.
             bootingCrawler = await crawlerStartingPoint();
-
-            //Start from first returned body
-            //crawlerGO();
         }
 
         //Function responsible of clearing database of queries before the crawler can start.
@@ -127,43 +118,59 @@ namespace Vidarr.Classes
 
         public async void crawlerGO()
         {
-            crawlerAmount = 0;
-
-            //If the crawler returns TRUE, continue crawling.
-            while (!finished)
-            {
-                //Only fetch from listResponses if listURL has less than 11 results.
-                if (listURL.Count < 11)
+            while (true) {
+                //If the crawler returns TRUE, continue crawling.
+                while (!finished)
                 {
-                    getUrls(fetchFromQueue("responses")); //Fills listURL
-                    crawlerAmount++;
-                }
-
-                //Fetch 10 bodies
-                for (int i = 0; i < 10; i++)
-                {
-                    //Fetch first URL and remove body
-                    string body = await getResponseBody(fetchFromQueue("urls")); //Fetches keywords and adds it
-                    //If body isn't an empty string. Empty string is possible due to wrong URL in HTTPRequest.
-                    if (!body.Equals(""))
-                    {
-                        //Enter body in double Body response.
-                        lock (this.locker)
-                        {
-                            listResponses.Add(body);
-                            listResponsesKeywords.Add(body);
-                        }
-                        crawlerAmount++;
+                    lock (this.locker) {
+                        Debug.WriteLine("Bodies: " + listResponses.Count + ". Urls: " + listURL.Count + ". BodiesKeywords: " + listResponsesKeywords.Count);
                     }
-                }
+                    
+                    //Only fetch from listResponses if listURL has less than 11 results.
+                    if (listURL.Count < 33)
+                    {
+                        try
+                        {
+                            getUrls(fetchFromQueue("responses")); //Fills listURL
+                        }
+                        catch (Exception e)
+                        {
+                            Debug.WriteLine("Error op deel 1: " + e.Message);
+                        }
+                    }
 
-                //Fetch from listResponsesKeywords if there is a body present.
-                while (listResponsesKeywords.Count > 0)
-                {
-                    //Fetch keywords from body from listResponseKeywords
-                    getKeywords(fetchFromQueue("keywords"));
-                }
-            }
+                    //Fetch 10 bodies
+                    for (int i = 0; i < 10; i++)
+                    {
+                        try
+                        {
+                            //Fetch first URL and remove body
+                            string body = await getResponseBody(fetchFromQueue("urls")); //Gets bodies
+                            //If body isn't an empty string. Empty string is possible due to wrong URL in HTTPRequest.
+                            if (!body.Equals(""))
+                            {
+                                //Enter body in double Body response.
+                                lock (this.locker)
+                                {
+                                    listResponses.Add(body);
+                                    listResponsesKeywords.Add(body);
+                                }
+                            }
+                        }
+                        catch (Exception e)
+                        {
+                            Debug.WriteLine("Error op deel 2: " + e.Message);
+                        }
+                    }
+
+                    //Fetch from listResponsesKeywords if there is a body present.
+                    while (listResponsesKeywords.Count > 0)
+                    {
+                        //Fetch keywords from body from listResponseKeywords
+                        getKeywords(fetchFromQueue("keywords")); //Fills database
+                    }
+                }//while finished
+            }//while true
         }
 
         
@@ -205,9 +212,9 @@ namespace Vidarr.Classes
                 }
                 
             }
-            catch (NullReferenceException e)
+            catch (Exception e)
             {
-                Debug.WriteLine("getUrls() geeft NullReferenceException: " + e.Message);
+                Debug.WriteLine("getUrls() geeft: " + e.Message);
             }
         }
 
@@ -217,9 +224,9 @@ namespace Vidarr.Classes
             {
                 CrawlerRegex.regexKeywords(httpResponseBody);
             }
-            catch (NullReferenceException e)
+            catch (Exception e)
             {
-                Debug.WriteLine("getKeywords() geeft NullReferenceException: " + e.Message);
+                Debug.WriteLine("getKeywords() geeft: " + e.Message);
             }
         }
 
@@ -269,6 +276,29 @@ namespace Vidarr.Classes
 
             return res;
         }
-        
+
+        static public void pauseAllTasks()
+        {
+            if (!finished)
+            {
+                finished = true;
+            }
+            else
+            {
+                ErrorDialog.showMessage("De crawler is al gepauzeerd.");
+            }
+        }
+        static public void resumeAllTasks()
+        {
+            if (finished)
+            {
+                finished = false;
+            }
+            else
+            {
+                ErrorDialog.showMessage("De crawler is al geresumeerd.");
+            }
+        }
+
     }
 }
