@@ -53,6 +53,23 @@ namespace Vidarr.Classes
                 }
             }, token);
             startupCrawling.Start();
+
+            // wait till the first crawler is done getting information
+            while (!bootingCrawler) {  }
+
+            // start 10 tasks to crawl
+            for (int i = 0; i < 5; i++) {
+                Task.Factory.StartNew(() =>
+                {
+                    crawlerGO();
+
+                    if (token.IsCancellationRequested)
+                    {
+                        token.ThrowIfCancellationRequested();
+                        tokensource.Dispose();
+                    }
+                }, token);
+            }
         }
 
         //startCrawling is a single task to empty DB before the crawler starts.
@@ -64,7 +81,7 @@ namespace Vidarr.Classes
             bootingCrawler = await crawlerStartingPoint();
 
             //Start from first returned body
-            crawlerGO();
+            //crawlerGO();
         }
 
         //Function responsible of clearing database of queries before the crawler can start.
@@ -101,6 +118,7 @@ namespace Vidarr.Classes
             catch (NullReferenceException e)
             {
                 Debug.WriteLine("crawlerStartingPoint() geeft NullReferenceException: " + e.Message);
+                ErrorDialog.showMessage("Oeps, er ging wat fout met de crawler. Misschien dat het programma opnieuw opstarten helpt.");
             }
 
             return completed;
@@ -109,46 +127,43 @@ namespace Vidarr.Classes
 
         public async void crawlerGO()
         {
-            
-
             crawlerAmount = 0;
 
             //If the crawler returns TRUE, continue crawling.
             while (!finished)
             {
-                //For testing purposees a maximum of 50 results are returned.
                 //Only fetch from listResponses if listURL has less than 11 results.
-                    if (listURL.Count < 11)
+                if (listURL.Count < 11)
+                {
+                    getUrls(fetchFromQueue("responses")); //Fills listURL
+                    crawlerAmount++;
+                }
+
+                //Fetch 10 bodies
+                for (int i = 0; i < 10; i++)
+                {
+                    //Fetch first URL and remove body
+                    string body = await getResponseBody(fetchFromQueue("urls")); //Fetches keywords and adds it
+                    //If body isn't an empty string. Empty string is possible due to wrong URL in HTTPRequest.
+                    if (!body.Equals(""))
                     {
-                        getUrls(fetchFromQueue("responses")); //Fills listURL
+                        //Enter body in double Body response.
+                        lock (this.locker)
+                        {
+                            listResponses.Add(body);
+                            listResponsesKeywords.Add(body);
+                        }
                         crawlerAmount++;
                     }
-
-                    //Fetch 10 bodies
-                    for (int i = 0; i < 10; i++)
-                    {
-                        //Fetch first URL and remove body
-                        string body = await getResponseBody(fetchFromQueue("urls")); //Fetches keywords and adds it
-                        //If body isn't an empty string. Empty string is possible due to wrong URL in HTTPRequest.
-                        if (!body.Equals(""))
-                        {
-                            //Enter body in double Body response.
-                            lock (this.locker)
-                            {
-                                listResponses.Add(body);
-                                listResponsesKeywords.Add(body);
-                            }
-                            crawlerAmount++;
-                        }
-                    }
-
-                    //Fetch from listResponsesKeywords if there is a body present.
-                    while (listResponsesKeywords.Count > 0)
-                    {
-                        //Fetch keywords from body from listResponseKeywords
-                        getKeywords(fetchFromQueue("keywords"));
-                    }
                 }
+
+                //Fetch from listResponsesKeywords if there is a body present.
+                while (listResponsesKeywords.Count > 0)
+                {
+                    //Fetch keywords from body from listResponseKeywords
+                    getKeywords(fetchFromQueue("keywords"));
+                }
+            }
         }
 
         
