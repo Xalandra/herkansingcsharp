@@ -155,5 +155,10 @@ namespace Vidarr
                 toDownload.Add(url);
             }
         }
+
+        private void cancelTasks(object sender, RoutedEventArgs e)
+        {
+            Crawler.cancelAllTasks();
+        }
     }
 }

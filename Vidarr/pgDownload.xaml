@@ -281,6 +281,7 @@
                 </ListView.ItemTemplate>
             </ListView>
 
+            <Button x:Name="CancelTasks" Content="Stop crawler" HorizontalAlignment="Right" Margin="0,0,33,99" VerticalAlignment="Bottom" Height="32" Width="149" Click="cancelTasks"/>
             <Button x:Name="GoToConverterButton" Content="Converter pagina" HorizontalAlignment="Right" Margin="0,0,33,33" VerticalAlignment="Bottom" Height="32" Width="149" Click="goToConverterScreen"/>
         </Grid>
 

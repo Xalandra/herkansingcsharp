@@ -27,7 +27,9 @@ namespace Vidarr.Classes
 
         static public CancellationTokenSource tokensource;
         static public CancellationToken token;
+        static bool finished = false;
         static public void cancelAllTasks() {
+            finished = true;
             tokensource.Cancel();
         }
 
@@ -44,7 +46,12 @@ namespace Vidarr.Classes
             Task startupCrawling = new Task(() => 
             {
                 startCrawling();
-            });
+
+                if (token.IsCancellationRequested) {
+                    token.ThrowIfCancellationRequested();
+                    tokensource.Dispose();
+                }
+            }, token);
             startupCrawling.Start();
         }
 
@@ -102,7 +109,7 @@ namespace Vidarr.Classes
 
         public async void crawlerGO()
         {
-            bool finished = false;
+            
 
             crawlerAmount = 0;
 
